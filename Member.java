@@ -9,14 +9,18 @@ public class Member {
     private LocalDate birthday;
     private int age;
     private boolean isActive;
-    private Enum MembershipType;
+    private MembershipType membershipType;
+    private boolean isCompetitive;
 
-    public Member(int memberID, String name, LocalDate birthday, boolean isActive)
+    public Member(int memberID, String name, LocalDate birthday, boolean isActive, boolean isCompetitive)
     {
         this.memberID = memberID;
         this.name = name;
         this.isActive = isActive;
-        Member.getMembershipType();
+        this.birthday = birthday;
+        this.age = calculateAge();
+        this.isCompetitive = isCompetitive;
+        this.membershipType = calculateMembershipType();
     }
     /**
      * Gets the members's ID .
@@ -82,15 +86,6 @@ public class Member {
     }
 
     /**
-     * Sets the age of the member.
-     *
-     * @param age sets date for members birthday.
-     */
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    /**
      * gets the membership status.
      * <p>
      * returns the active or passive memberstatus.
@@ -108,13 +103,13 @@ public class Member {
         this.isActive = isActive;
     }
 
-    public int calculateAge() {
+    private int calculateAge() {
         LocalDate today = LocalDate.now();
         Period age = Period.between(birthday, today);
         return age.getYears();
 
     }
-    public static MembershipType getMembershipType(int age)
+    private MembershipType calculateMembershipType()
     {
         if(age >= 60)
         {
@@ -128,5 +123,9 @@ public class Member {
         {
             return MembershipType.JUNIOR;
         }
+    }
+    public MembershipType getMembershipType()
+    {
+        return membershipType;
     }
 }
