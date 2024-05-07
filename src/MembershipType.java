@@ -1,3 +1,5 @@
+
+
 public class MembershipType {
     private int typeID;
     private  String description;
@@ -13,8 +15,20 @@ public class MembershipType {
         this.fee=fee;
     }
 
+    public int getTypeID() {
+        return typeID;
+    }
+
+    public double getFee() {
+        return fee;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public void addMemberShipType(){
-        //TODO: Add database functionality here
+
     }
     public void updateFee(double amount){
         this.fee = amount;
