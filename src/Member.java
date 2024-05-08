@@ -8,19 +8,24 @@ public class Member {
     private String name;
     private LocalDate birthday;
     private int age;
-    private boolean isActive;
+    private int membershipTypeID;
     private MembershipType membershipType;
-    private boolean isCompetitive;
 
-    public Member(int memberID, String name, LocalDate birthday, boolean isActive, boolean isCompetitive)
+    public Member(String name, LocalDate birthday, boolean isPassive)
     {
-        this.memberID = memberID;
         this.name = name;
-        this.isActive = isActive;
         this.birthday = birthday;
         this.age = calculateAge();
-        this.isCompetitive = isCompetitive;
-        this.membershipType = calculateMembershipType();
+        this.membershipTypeID = calculateMembershipTypeID(isPassive);
+
+    }
+
+    public Member(int memberID, String name, LocalDate birthday,MembershipType membershipType){
+        this.memberID = memberID;
+        this.name = name;
+        this.birthday = birthday;
+        this.age = calculateAge();
+        this.membershipType = membershipType;
     }
     /**
      * Gets the members's ID .
@@ -85,47 +90,45 @@ public class Member {
         return age;
     }
 
-    /**
-     * gets the membership status.
-     * <p>
-     * returns the active or passive memberstatus.
-     */
-    public boolean getIsActive() {
-        return isActive;
-    }
-
-    /**
-     * Sets the if a member is active.
-     *
-     * @param isActive sets membership status for members.
-     */
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
-
     private int calculateAge() {
         LocalDate today = LocalDate.now();
         Period age = Period.between(birthday, today);
         return age.getYears();
 
     }
-    private MembershipType calculateMembershipType()
+    private int calculateMembershipTypeID(boolean isPassive)
     {
-        if(age >= 60)
-        {
-            return MembershipType.SUPERSENIOR;
-        }
-            else if (age >= 18)
-            {
+        if (!isPassive) {
+            if (age >= 60) {
                 return MembershipType.SENIOR;
+            } else if (age >= 18) {
+                return MembershipType.ADULT;
+            } else {
+                return MembershipType.JUNIOR;
             }
-        else
-        {
-            return MembershipType.JUNIOR;
-        }
+        }else {return MembershipType.PASSIVE;}
+
+    }
+    private MembershipType calculateMembershipType(){
+        DatabaseManager dbm = new DatabaseManager();
+        MembershipType temp = dbm.getMembershipType(membershipTypeID);
+        dbm.closeConnection();
+        return temp;
     }
     public MembershipType getMembershipType()
     {
-        return membershipType;
+        return this.membershipType;
     }
+
+    public int getMembershipTypeID() {
+        return this.membershipTypeID;
+    }
+
+    public LocalDate getBirthDate() {
+        return this.birthday;
+    }
+    public void registerMember(DatabaseManager dbManager) {
+        dbManager.addMember(this);
+    }
+
 }
