@@ -6,8 +6,9 @@ import java.util.List;
 public class DatabaseManager {
 
     private Connection connection;
+    private String databaseUrl = "jdbc:sqlite:swim-db";
     public DatabaseManager() {
-        connect("jdbc:sqlite:swim-db");
+        connect(databaseUrl);
     }
 
     private void connect(String databaseUrl) {
@@ -16,6 +17,10 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean getAutoCommit() throws SQLException {
+        return connection.getAutoCommit();
     }
 
     public void addMember(Member member) {
@@ -144,6 +149,126 @@ public class DatabaseManager {
         return null;
     }
 
+    public int addNewSwimmer(Swimmer swimmer, int teamID){
+        int swimmerID = 0;
+        String memberSql = "INSERT INTO Members (name, birthday, membershipTypeID) VALUES (?, ?, ?)";
+        String swimmerSql = "INSERT INTO Swimmers (memberID, teamID) VALUES (?, ?)";
+
+
+        PreparedStatement memberStmt = null;
+        PreparedStatement swimmerStmt = null;
+        try{
+            connection.setAutoCommit(false); // Start transaction
+            memberStmt = connection.prepareStatement(memberSql,Statement.RETURN_GENERATED_KEYS);
+            memberStmt.setString(1, swimmer.getName());
+            memberStmt.setDate(2, Date.valueOf(swimmer.getBirthDate()));
+            memberStmt.setInt(3, swimmer.getMembershipTypeID());
+            int memberAffected = memberStmt.executeUpdate();
+
+            if(memberAffected == 1){
+                ResultSet rs = memberStmt.getGeneratedKeys();
+                if (rs.next()) {
+                    int memberID = rs.getInt(1);
+
+                    swimmerStmt = connection.prepareStatement(swimmerSql,Statement.RETURN_GENERATED_KEYS);
+                    swimmerStmt.setInt(1, memberID);
+                    swimmerStmt.setInt(2,teamID);
+                    int swimmerAffected = swimmerStmt.executeUpdate();
+
+                    if (swimmerAffected==1){
+                        ResultSet srs = swimmerStmt.getGeneratedKeys();
+                        if (srs.next()){
+                            swimmerID = srs.getInt(1);
+                        }
+                    }
+                }
+            }
+            connection.commit(); // Commit transaction
+        }catch (SQLException e){
+            if(connection !=null){
+                try{
+                    connection.rollback(); // Rollback transaction on error
+                }catch (SQLException ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+            System.out.println(e.getMessage());
+        }
+        try{
+            connection.setAutoCommit(true);
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return swimmerID;
+    }
+
+    public void addDiscipline(String name){
+        String sql = "INSERT INTO Disciplines (name) VALUES (?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("A new discipline was added successfully.");
+            } else {
+                System.out.println("A new discipline could not be added.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error adding new discipline: " + e.getMessage());
+        }
+    }
+
+    public void addSwimmerDiscipline(int swimmerID, int disciplineID){
+        String sql = "INSERT INTO SwimmerDisciplines (swimmerID, disciplineID) VALUES (?, ?)";
+        try(PreparedStatement pstmt = connection.prepareStatement(sql)){
+            pstmt.setInt(1, swimmerID);
+            pstmt.setInt(2, disciplineID);
+            pstmt.executeUpdate();
+        }catch (SQLException e){
+            System.out.println("Error adding discipline to swimmer: " + e.getMessage());
+        }
+    }
+
+    // Method to get all disciplines for a specific swimmer
+    public List<Discipline> getDisciplinesForSwimmer(int swimmerID) {
+        List<Discipline> disciplines = new ArrayList<>();
+        String sql = "SELECT d.disciplineID, d.name FROM Disciplines d " +
+                "JOIN SwimmerDisciplines sd ON d.disciplinesID = sd.disciplineID " +
+                "WHERE sd.swimmerID = ?";
+
+        try(PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1,swimmerID);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()){
+                int disciplineID = rs.getInt("disciplineID");
+                String name = rs.getString("name");
+                disciplines.add(new Discipline(disciplineID, name));
+            }
+        }catch (SQLException e){
+            System.out.println("Error retrieving disciplines: " + e.getMessage());
+        }
+        return disciplines;
+    }
+
+    // Method to add a new performance record
+    public void addPerformanceRecord(Record record) {
+        String sql = "INSERT INTO PerformanceRecords (swimmerID, disciplineID, time, date) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, record.getSwimmerID());
+            pstmt.setInt(2, record.getDisciplineID());
+            pstmt.setDouble(3, record.getTime());
+            pstmt.setDate(4, Date.valueOf(record.getDate()));
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("A new performance record was added successfully.");
+            } else {
+                System.out.println("Failed to add the performance record.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error adding new performance record: " + e.getMessage());
+        }
+    }
 
     // Method to close the database connection
     public void closeConnection() {
@@ -154,6 +279,16 @@ public class DatabaseManager {
             }
         } catch (SQLException e) {
             System.out.println("Error closing connection: " + e.getMessage());
+        }
+    }
+
+    public void reconnect(){
+        try{
+            if (this.connection != null && this.connection.isClosed()){
+                this.connect(databaseUrl);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
     }
 }

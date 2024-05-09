@@ -1,20 +1,36 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Swimmer extends Member {
+    private int SwimmerID;
     //TODO: Team class here
     private List<Discipline> disciplines;
 
-    public Swimmer (int swimmerID, String name, LocalDate birthday,MembershipType membershipType)
+    public Swimmer (int memberID, String name, LocalDate birthday,MembershipType membershipType, DatabaseManager dBmanager)
     {
-        super(swimmerID, name, birthday, membershipType);
+        super(memberID, name, birthday, membershipType);
+        if(this.SwimmerID !=0){
+            disciplines = dBmanager.getDisciplinesForSwimmer(this.SwimmerID);
+        }
+    }
+    public Swimmer (int swimmerID, int memberID, String name, LocalDate birthday,MembershipType membershipType)
+    {
+        super(memberID, name, birthday, membershipType);
+        this.SwimmerID = swimmerID;
+        disciplines = new ArrayList<>();
     }
 
-    public void addDiscipline(Discipline discipline)
+    public int getSwimmerID() {
+        return this.SwimmerID;
+    }
+
+    public void addDiscipline(DatabaseManager dBManager, Discipline discipline)
     {
         disciplines.add(discipline);
+        dBManager.addSwimmerDiscipline(this.getSwimmerID(),discipline.getDisciplineID());
     }
 
     public void updatePerformance(Discipline discipline, double result, LocalDate date)
