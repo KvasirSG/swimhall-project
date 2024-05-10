@@ -1,8 +1,5 @@
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Swimmer extends Member {
     private int SwimmerID;
@@ -33,15 +30,36 @@ public class Swimmer extends Member {
         dBManager.addSwimmerDiscipline(this.getSwimmerID(),discipline.getDisciplineID());
     }
 
-    public void updatePerformance(Discipline discipline, double result, LocalDate date)
+    public void updatePerformance(Discipline discipline, double result, LocalDate date, DatabaseManager dBManager)
     {
-        discipline.updateRecord(this, result, date);
+        discipline.updateRecord(this, result, date, dBManager);
     }
 
-    private Map getBestResults()
+    public Record getBestResult(DatabaseManager dBManager)
     {
-        HashMap<Discipline, Record> bestResult = new HashMap<>();
-        return bestResult;
+        List<Record> records = dBManager.getPerformanceRecordsForSwimmer(this.SwimmerID);
+        Optional<Record> bestResult = records.stream().min(Comparator.comparingDouble(Record::getTime));
+        return bestResult.orElse(null);
+    }
+
+    public List<Record> getTopResults(int amount, DatabaseManager dbManager){
+        List<Record> records = dbManager.getPerformanceRecordsForSwimmer(this.SwimmerID);
+        Collections.sort(records, Comparator.comparingDouble(Record::getTime));
+        int count = Math.min(amount, records.size());
+        List<Record> bestResults = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            bestResults.add(records.get(i));
+        }
+        return bestResults;
+    }
+
+    public void registerSwimmer(DatabaseManager dBManager, Boolean newMember){
+        if (newMember){
+            dBManager.addNewSwimmer(this,0);
+        }else {
+            dBManager.addSwimmerFromExistingMember(this.getMemberID(),0);
+        }
+
     }
 
 }

@@ -45,4 +45,8 @@ public class Record {
     public LocalDate getDate() {
         return date;
     }
+
+    public void registerRecord(DatabaseManager dBManager){
+        dBManager.addPerformanceRecord(this);
+    }
 }
