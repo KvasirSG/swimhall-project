@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Swimmer extends Member {
     private int SwimmerID;
-    //TODO: Team class here
+    private int teamID;
     private List<Discipline> disciplines;
 
     public Swimmer (int memberID, String name, LocalDate birthday,MembershipType membershipType, DatabaseManager dBmanager)
@@ -18,6 +18,10 @@ public class Swimmer extends Member {
         super(memberID, name, birthday, membershipType);
         this.SwimmerID = swimmerID;
         disciplines = new ArrayList<>();
+    }
+
+    public void setSwimmerID(int swimmerID) {
+        SwimmerID = swimmerID;
     }
 
     public int getSwimmerID() {
@@ -55,11 +59,18 @@ public class Swimmer extends Member {
 
     public void registerSwimmer(DatabaseManager dBManager, Boolean newMember){
         if (newMember){
-            dBManager.addNewSwimmer(this,0);
+            dBManager.addNewSwimmer(this,this.teamID);
         }else {
-            dBManager.addSwimmerFromExistingMember(this.getMemberID(),0);
+            this.SwimmerID = dBManager.addSwimmerFromExistingMember(this.getMemberID(),this.teamID);
         }
 
     }
 
+    public void setTeamID(int teamID) {
+        this.teamID = teamID;
+    }
+
+    public int getTeamID() {
+        return teamID;
+    }
 }
