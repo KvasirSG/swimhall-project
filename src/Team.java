@@ -1,3 +1,4 @@
+import java.util.Comparator;
 import java.util.List;
 
 public class Team
@@ -34,12 +35,17 @@ public class Team
 
     public void addSwimmer(Swimmer swimmer)
     {
+        swimmer.setTeamID(this.teamID);
         team.add(swimmer);
     }
 
     public void removeSwimmer(Swimmer swimmer)
     {
-        team.remove(swimmer);
+        if (swimmer.getTeamID() == this.teamID){
+            swimmer.setTeamID(0);
+            team.remove(swimmer);
+        }
+
     }
 
 }
