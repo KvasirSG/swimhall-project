@@ -27,6 +27,7 @@ public class DatabaseManager {
     MEMBER MANAGEMENT
      =============================================================*/
     public void addMember(Member member) {
+        int memberID = 0;
         String sql = "INSERT INTO Members (name, birthday, membershipTypeID) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, member.getName());
@@ -35,10 +36,10 @@ public class DatabaseManager {
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        member.setMemberID(generatedKeys.getInt(1));
-                    }
+                ResultSet rs = statement.getGeneratedKeys();
+                if (rs.next()){
+                    memberID = rs.getInt(1);
+                    member.setMemberID(memberID);
                 }
             }
         } catch (SQLException e) {
@@ -175,72 +176,56 @@ public class DatabaseManager {
     SWIMMER MANAGEMENT
      =============================================================*/
 
-    public int addNewSwimmer(Swimmer swimmer, int teamID){
-        int swimmerID = 0;
-        String memberSql = "INSERT INTO Members (name, birthday, membershipTypeID) VALUES (?, ?, ?)";
-        String swimmerSql = "INSERT INTO Swimmers (memberID, teamID) VALUES (?, ?)";
+    public void addNewSwimmer(Swimmer swimmer, int teamID){
 
+        String sql = "INSERT INTO Swimmers (memberID, teamID) VALUES (?, ?)";
 
-        PreparedStatement memberStmt = null;
-        PreparedStatement swimmerStmt = null;
+        Member member = new Member(swimmer.getName(),swimmer.getBirthday(),false);
+        addMember(member);
+        int memberID = member.getMemberID();
+        swimmer.setMemberID(memberID);
+
         try{
-            connection.setAutoCommit(false); // Start transaction
-            memberStmt = connection.prepareStatement(memberSql,Statement.RETURN_GENERATED_KEYS);
-            memberStmt.setString(1, swimmer.getName());
-            memberStmt.setDate(2, Date.valueOf(swimmer.getBirthDate()));
-            memberStmt.setInt(3, swimmer.getMembershipTypeID());
-            int memberAffected = memberStmt.executeUpdate();
+            if (memberID!= 0){
+                PreparedStatement pstmt = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+                pstmt.setInt(1, memberID);
+                pstmt.setInt(2,teamID);
+                int swimmerAffected = pstmt.executeUpdate();
 
-            if(memberAffected == 1){
-                ResultSet rs = memberStmt.getGeneratedKeys();
-                if (rs.next()) {
-                    int memberID = rs.getInt(1);
-
-                    swimmerStmt = connection.prepareStatement(swimmerSql,Statement.RETURN_GENERATED_KEYS);
-                    swimmerStmt.setInt(1, memberID);
-                    swimmerStmt.setInt(2,teamID);
-                    int swimmerAffected = swimmerStmt.executeUpdate();
-
-                    if (swimmerAffected==1){
-                        ResultSet srs = swimmerStmt.getGeneratedKeys();
-                        if (srs.next()){
-                            swimmerID = srs.getInt(1);
-                        }
+                if (swimmerAffected==1){
+                    ResultSet rs = pstmt.getGeneratedKeys();
+                    if (rs.next()){
+                        swimmer.setSwimmerID(rs.getInt(1));
                     }
                 }
-            }
-            connection.commit(); // Commit transaction
-        }catch (SQLException e){
-            if(connection !=null){
-                try{
-                    connection.rollback(); // Rollback transaction on error
-                }catch (SQLException ex) {
-                    System.out.println(ex.getMessage());
-                }
-            }
-            System.out.println(e.getMessage());
-        }
-        try{
-            connection.setAutoCommit(true); // reset the state after end transaction
+            } else throw new SQLException("Member could not be added");
+
+
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }
-        return swimmerID;
     }
 
-    public void addSwimmerFromExistingMember(int memberID,int teamID){
+    public int addSwimmerFromExistingMember(int memberID,int teamID){
         String sql = "INSERT INTO Swimmers (memberID, teamID) VALUES (?, ?)";
-        try(PreparedStatement pstmt = connection.prepareStatement(sql)){
+        int swimmerID=0;
+        try(PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
             pstmt.setInt(1, memberID);
             pstmt.setInt(2, teamID);
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows>0){
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()){
+                    swimmerID = rs.getInt(1);
+                }
+
                 System.out.println("New swimmer added successfully for memberID: " + memberID);
             }
             else System.out.println("Failed to add new swimmer for memberID: " + memberID);
         }catch (SQLException e){
             System.out.println("Error adding new swimmer: " + e.getMessage());
         }
+        return swimmerID;
     }
 
     public Swimmer getSwimmer(int swimmerID){
