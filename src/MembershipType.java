@@ -30,8 +30,8 @@ public class MembershipType {
     public void addMemberShipType(){
 
     }
-    public void updateFee(double amount){
+    public void updateFee(double amount, DatabaseManager dbManager){
         this.fee = amount;
-        //TODO: add database functionality here
+        dbManager.updateMembershipFee(this.typeID,amount);
     }
 }
