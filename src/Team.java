@@ -10,7 +10,7 @@ public class Team
     private int competitionID;
     List<Swimmer> team;
 
-    public Team(int teamID, String name, int)
+    public Team(int teamID, String name)
     {
         this.teamID = teamID;
         this.name = name;
