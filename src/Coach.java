@@ -49,7 +49,7 @@ public class Coach
         List<Record>records = new ArrayList<>();
         for(Swimmer swimmer : swimmers)
         {
-            records.add(swimmer.getTopResults(1,dbManager).get(1));
+
         }
 
 

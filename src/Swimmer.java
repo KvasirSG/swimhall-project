@@ -57,6 +57,22 @@ public class Swimmer extends Member {
         return bestResults;
     }
 
+    public List<Record> getBestRecordPerDiscipline(DatabaseManager databaseManager){
+        List<Record> allRecords = databaseManager.getPerformanceRecordsForSwimmer(this.SwimmerID);
+        List<Record> bestRecords = new ArrayList<>();
+        for (Discipline discipline : disciplines){
+            List<Record> tempRecords = new ArrayList<>();
+            for (Record record : allRecords){
+                if (record.getDisciplineID()== discipline.getDisciplineID()){
+                    tempRecords.add(record);
+                }
+            }
+            Optional<Record> bestTime = tempRecords.stream().min(Comparator.comparingDouble(Record::getTime));
+            bestRecords.add(bestTime.orElse(null));
+        }
+        return bestRecords;
+    }
+
     public void registerSwimmer(DatabaseManager dBManager, Boolean newMember){
         if (newMember){
             dBManager.addNewSwimmer(this,this.teamID);
