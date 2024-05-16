@@ -7,6 +7,7 @@ public class Competition
     private LocalDate date;
     private String location;
     private List<Swimmer> swimmers;
+    private String compName;
 
 public Competition(int competitionID, LocalDate date, String location)
 {

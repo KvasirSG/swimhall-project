@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Coach
@@ -40,9 +41,18 @@ public class Coach
     {
         this.name = name;
     }
-    public void selectForCompetition(Competition competition)
+
+    public void selectForCompetition(Competition competition, DatabaseManager dbManager)
     {
         CompTeam.add(competition);
+        List<Swimmer>swimmers = new ArrayList<>();
+        List<Record>records = new ArrayList<>();
+        for(Swimmer swimmer : swimmers)
+        {
+            records.add(swimmer.getTopResults(1,dbManager).get(1));
+        }
+
+
 
     }
 
