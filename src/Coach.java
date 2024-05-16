@@ -7,7 +7,7 @@ public class Coach
     private int coachID;
     private String name;
     private int teamId;
-    List<Competition> CompTeam;
+    List<Competition> compTeam;
 
     public Coach(int coachID, String name, int teamId)
     {
@@ -44,7 +44,7 @@ public class Coach
 
     public void selectForCompetition(Competition competition, DatabaseManager dbManager)
     {
-        CompTeam.add(competition);
+        compTeam.add(competition);
         List<Swimmer>swimmers = new ArrayList<>();
         List<Record>records = new ArrayList<>();
         for(Swimmer swimmer : swimmers)
