@@ -42,11 +42,10 @@ public void registerSwimmer(Swimmer swimmer)
 {
    swimmers.add(swimmer);
 }
-public void recordResult(Swimmer swimmer,  int placement, double time)
+public void recordResult(Swimmer swimmer, int placement, double time)
 {
     Result result = new Result(swimmer.getSwimmerID(),this.getCompetitionID(),placement,time);
 }
-
 
 
 
