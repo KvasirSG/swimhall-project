@@ -39,7 +39,7 @@ public class Payments {
         for (Invoice invoice:invoices){
             if (!invoice.isPaid() && invoice.getDueDate().isBefore(LocalDate.now())){
                 arrears.add(invoice);
-                
+
             }
         }
     }
