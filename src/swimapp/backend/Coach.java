@@ -1,4 +1,4 @@
-import java.util.List;
+package swimapp.backend;
 
 public class Coach
 {
@@ -6,8 +6,7 @@ public class Coach
     private String name;
     private int teamId;
 
-    public void selectForCompetition(Competition Competition)
+    public void selectForCompetition()
     {
-        List<Swimmer>
     }
 }

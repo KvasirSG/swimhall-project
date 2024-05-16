@@ -1,4 +1,5 @@
-import java.util.Comparator;
+package swimapp.backend;
+
 import java.util.List;
 
 public class Team
