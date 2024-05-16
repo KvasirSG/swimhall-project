@@ -5,8 +5,14 @@ public class Team
 {
     private int teamID;
     private String name;
-
+    private int competitionID;
     List<Swimmer> team;
+
+    public Team(int teamID, String name, int)
+    {
+        this.teamID = teamID;
+        this.name = name;
+    }
 
     public int getTeamID()
     {
@@ -17,6 +23,7 @@ public class Team
     {
         this.teamID = teamID;
     }
+
     public String getName()
     {
         return name;
@@ -24,12 +31,6 @@ public class Team
 
     public void setName(String name)
     {
-        this.name = name;
-    }
-
-    public Team(int teamID, String name)
-    {
-        this.teamID = teamID;
         this.name = name;
     }
 

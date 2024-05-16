@@ -1,4 +1,5 @@
-public class Result {
+public class Result
+{
     private int swimmerID;
     private int competitionID;
     private int placement;
