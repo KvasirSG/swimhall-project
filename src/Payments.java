@@ -14,12 +14,14 @@ public class Payments {
         arrears = new ArrayList<>();
     }
 
-    public void makePayment(Invoice invoice, Date birthday) {
+    public void makePayment(Invoice invoice, DatabaseManager dbManager) {
         invoice.setPaid(true);
+        dbManager.markInvoiceAsPaid(invoice.getInvoiceID());
+
     }
 
     public void createInvoice(int memberID, double amount){
-        Invoice invoice = new Invoice(amount, memberID);
+        Invoice invoice = new Invoice(amount, memberID, LocalDate.now().plusDays(30));
     }
 
     public List<Member> getMembersInArrears(DatabaseManager dbManager){
@@ -86,5 +88,16 @@ public class Payments {
 
     public void setInvoices(List<Invoice> invoices) {
         this.invoices = invoices;
+    }
+
+    public void fetchMembersFromDB(DatabaseManager dbManager){
+        this.members = dbManager.getAllMembers();
+    }
+
+    public void fetchInvoicesForMembers(DatabaseManager dbManager){
+        for (Member member:members){
+            List<Invoice> tempvoices = dbManager.getInvoicesForMember(member.getMemberID());
+            invoices.addAll(tempvoices);
+        }
     }
 }
