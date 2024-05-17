@@ -6,16 +6,16 @@ public class Swimmer extends Member {
     private int teamID;
     private List<Discipline> disciplines;
 
-    public Swimmer (int memberID, String name, LocalDate birthday,MembershipType membershipType, DatabaseManager dBmanager)
+    public Swimmer (int memberID, String name, Gender gender,  LocalDate birthday,MembershipType membershipType, DatabaseManager dBmanager)
     {
-        super(memberID, name, birthday, membershipType);
+        super(memberID, name,gender, birthday, membershipType);
         if(this.SwimmerID !=0){
             disciplines = dBmanager.getDisciplinesForSwimmer(this.SwimmerID);
         }
     }
-    public Swimmer (int swimmerID, int memberID, String name, LocalDate birthday,MembershipType membershipType)
+    public Swimmer (int swimmerID, int memberID, String name, Gender gender, LocalDate birthday,MembershipType membershipType)
     {
-        super(memberID, name, birthday, membershipType);
+        super(memberID, name, gender , birthday, membershipType);
         this.SwimmerID = swimmerID;
         disciplines = new ArrayList<>();
     }
@@ -64,6 +64,15 @@ public class Swimmer extends Member {
             this.SwimmerID = dBManager.addSwimmerFromExistingMember(this.getMemberID(),this.teamID);
         }
 
+    }
+
+    public void remove(DatabaseManager dbManager, boolean asMember){
+        if (asMember){
+            dbManager.removeSwimmer(this.getSwimmerID());
+            dbManager.deleteMember(this.getMemberID());
+        } else {
+            dbManager.removeSwimmer(this.getSwimmerID());
+        }
     }
 
     public void setTeamID(int teamID) {

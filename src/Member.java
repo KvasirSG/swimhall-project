@@ -11,18 +11,22 @@ public class Member {
     private int membershipTypeID;
     private MembershipType membershipType;
 
-    public Member(String name, LocalDate birthday, boolean isPassive)
+    private Gender gender;
+
+    public Member(String name, Gender gender , LocalDate birthday, boolean isPassive)
     {
         this.name = name;
+        this.gender = gender;
         this.birthday = birthday;
         this.age = calculateAge();
         this.membershipTypeID = calculateMembershipTypeID(isPassive);
 
     }
 
-    public Member(int memberID, String name, LocalDate birthday,MembershipType membershipType){
+    public Member(int memberID, String name, Gender gender, LocalDate birthday,MembershipType membershipType){
         this.memberID = memberID;
         this.name = name;
+        this.gender = gender;
         this.birthday = birthday;
         this.age = calculateAge();
         this.membershipType = membershipType;
@@ -130,5 +134,15 @@ public class Member {
     public void registerMember(DatabaseManager dbManager) {
         dbManager.addMember(this);
     }
+    public void delete(DatabaseManager dbManager){
+        dbManager.deleteMember(this.memberID);
+    }
 
+    public void update(DatabaseManager dbManager){
+        dbManager.updateMember(this);
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
 }
