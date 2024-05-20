@@ -1,4 +1,6 @@
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Competition
@@ -9,12 +11,21 @@ public class Competition
     private List<Swimmer> swimmers;
     private String compName;
 
-public Competition(int competitionID, LocalDate date, String location)
+public Competition(int competitionID, LocalDate date, String location, String compName)
 {
     this.competitionID = competitionID;
     this.date = date;
     this.location = location;
+    this.compName = compName;
+    this.swimmers = new ArrayList<>();
 }
+
+    public Competition(LocalDate date, String location, String compName)
+    {
+        this.date = date;
+        this.location = location;
+        this.compName = compName;
+    }
 public int getCompetitionID()
     {
         return competitionID;
@@ -43,14 +54,14 @@ public void registerSwimmer(Swimmer swimmer)
 {
    swimmers.add(swimmer);
 }
-public void recordResult(Swimmer swimmer, int placement, double time)
-{
+public void recordResult(Swimmer swimmer, int placement, double time, DatabaseManager dbManager) throws SQLException {
     Result result = new Result(swimmer.getSwimmerID(),this.getCompetitionID(),placement,time);
+    dbManager.recordResult(this.getCompetitionID(), swimmer.getSwimmerID(), placement, time);
 }
 
-
-
-
-
+    public void registerSwimmer(Swimmer swimmer, DatabaseManager dbManager) throws SQLException {
+        swimmers.add(swimmer);
+        dbManager.registerSwimmerForCompetition(this.competitionID, swimmer.getSwimmerID());
+    }
 
 }

@@ -7,7 +7,6 @@ public class Team
 {
     private int teamID;
     private String name;
-    private int competitionID;
     List<Swimmer> team;
 
     public Team(int teamID, String name)

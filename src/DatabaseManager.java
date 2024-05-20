@@ -634,6 +634,87 @@ public class DatabaseManager {
         }
     }
 
+    // Competition Management
+
+    public void registerSwimmerForCompetition(int competitionID, int swimmerID) throws SQLException {
+        String query = "INSERT INTO CompetitionSwimmers (competitionID, swimmerID) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, competitionID);
+            stmt.setInt(2, swimmerID);
+            stmt.executeUpdate();
+        }
+    }
+
+    public void recordResult(int competitionID, int swimmerID, int placement, double time) throws SQLException {
+        String query = "INSERT INTO Results (competitionID, swimmerID, placement, time) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, competitionID);
+            stmt.setInt(2, swimmerID);
+            stmt.setInt(3, placement);
+            stmt.setDouble(4, time);
+            stmt.executeUpdate();
+        }
+    }
+
+    public List<Swimmer> getSwimmersForTeam(int teamID) throws SQLException {
+        String query = "SELECT s.swimmerID, m.memberID, m.name, m.gender, m.birthday, m.membershipTypeID " +
+                "FROM Swimmers s " +
+                "JOIN Members m ON s.memberID = m.memberID " +
+                "WHERE s.teamID = ?";
+        List<Swimmer> swimmers = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, teamID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int swimmerID = rs.getInt("swimmerID");
+                int memberID = rs.getInt("memberID");
+                String name = rs.getString("name");
+                Gender gender = Gender.valueOf(rs.getString("gender").toUpperCase());
+                LocalDate birthday = rs.getDate("birthday").toLocalDate();
+                int membershipTypeID = rs.getInt("membershipTypeID");
+                MembershipType membershipType = getMembershipType(membershipTypeID);
+                Swimmer swimmer = new Swimmer(swimmerID, memberID, name, gender, birthday, membershipType);
+                swimmers.add(swimmer);
+            }
+        }
+
+        return swimmers;
+    }
+
+    public List<Competition> getCompetitionsForTeam(int teamID) throws SQLException {
+        String query = "SELECT c.competitionID, c.date, c.location, c.compName " +
+                "FROM Competitions c " +
+                "JOIN TeamCompetitions tc ON c.competitionID = tc.competitionID " +
+                "WHERE tc.teamID = ?";
+        List<Competition> competitions = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, teamID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int competitionID = rs.getInt("competitionID");
+                LocalDate date = rs.getDate("date").toLocalDate();
+                String location = rs.getString("location");
+                String compName = rs.getString("compName");
+                Competition competition = new Competition(competitionID, date, location, compName);
+                competitions.add(competition);
+            }
+        }
+
+        return competitions;
+    }
+
+    public void addTeamToCompetition(int teamID, int competitionID) throws SQLException {
+        String query = "INSERT INTO TeamCompetitions (teamID, competitionID) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, teamID);
+            stmt.setInt(2, competitionID);
+            stmt.executeUpdate();
+        }
+    }
+
+
     // DB Connection Management
 
     /**

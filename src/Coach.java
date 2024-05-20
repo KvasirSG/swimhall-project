@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,18 +43,16 @@ public class Coach
         this.name = name;
     }
 
-    public void selectForCompetition(Competition competition, DatabaseManager dbManager)
-    {
+    public void selectForCompetition(Competition competition, DatabaseManager dbManager) throws SQLException {
         compTeam.add(competition);
         List<Swimmer>swimmers = new ArrayList<>();
-        List<Record>records = new ArrayList<>();
+        dbManager.addTeamToCompetition(this.teamId, competition.getCompetitionID());
         for(Swimmer swimmer : swimmers)
         {
-
+            competition.registerSwimmer(swimmer, dbManager);
         }
-
-
-
     }
+
+
 
 }
