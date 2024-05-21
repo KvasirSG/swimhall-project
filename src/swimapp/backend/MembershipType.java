@@ -1,4 +1,4 @@
-
+package swimapp.backend;
 
 public class MembershipType {
     private int typeID;

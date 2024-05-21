@@ -1,3 +1,5 @@
+package swimapp.backend;
+
 public class Result
 {
     private int swimmerID;

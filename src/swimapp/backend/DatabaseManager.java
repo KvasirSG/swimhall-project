@@ -1,3 +1,5 @@
+package swimapp.backend;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ public class DatabaseManager {
     private String databaseUrl = "jdbc:sqlite:swim-db";
 
     /**
-     * Constructs a DatabaseManager and initializes a connection to the database.
+     * Constructs a swimapp.backend.DatabaseManager and initializes a connection to the database.
      */
     public DatabaseManager() {
         connect(databaseUrl);
@@ -40,7 +42,7 @@ public class DatabaseManager {
         return connection.getAutoCommit();
     }
 
-    // Member Management
+    // swimapp.backend.Member Management
 
     /**
      * Adds a new member to the database.
@@ -142,7 +144,7 @@ public class DatabaseManager {
             pstmt.setInt(1, memberID);
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("Member deleted successfuly!");
+                System.out.println("swimapp.backend.Member deleted successfuly!");
             } else {
                 System.out.println("Could not find member with ID: " + memberID);
             }
@@ -164,7 +166,7 @@ public class DatabaseManager {
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("Member updated successfuly!");
+                System.out.println("swimapp.backend.Member updated successfuly!");
             } else {
                 System.out.println("Could not find member with ID: " + member.getMemberID());
             }
@@ -256,7 +258,7 @@ public class DatabaseManager {
         return null;
     }
 
-    // Swimmer Management
+    // swimapp.backend.Swimmer Management
 
     /**
      * Adds a new swimmer to the database and assigns them to a team.
@@ -285,7 +287,7 @@ public class DatabaseManager {
                         swimmer.setSwimmerID(rs.getInt(1));
                     }
                 }
-            } else throw new SQLException("Member could not be added");
+            } else throw new SQLException("swimapp.backend.Member could not be added");
 
 
         }catch (SQLException e){
@@ -396,7 +398,7 @@ public class DatabaseManager {
             pstmt.setInt(1, swimmerID);
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("Swimmer deleted successfuly!");
+                System.out.println("swimapp.backend.Swimmer deleted successfuly!");
             } else {
                 System.out.println("Could not find swimmer with ID: " + swimmerID);
             }
@@ -406,7 +408,7 @@ public class DatabaseManager {
         }
     }
 
-    // Discipline Management
+    // swimapp.backend.Discipline Management
 
     /**
      * Adds a new discipline to the database.
@@ -529,7 +531,7 @@ public class DatabaseManager {
         return disciplines;
     }
 
-    // Record Management
+    // swimapp.backend.Record Management
 
     /**
      * Adds a new performance record to the database.
@@ -580,7 +582,7 @@ public class DatabaseManager {
         return records;
     }
 
-    // Invoice Management
+    // swimapp.backend.Invoice Management
 
     public void addInvoice(Invoice invoice){
         String sql = "INSERT INTO Invoice (amount, memberID, paid, dueDate) VALUES (?, ?, ?, ?)";
@@ -634,7 +636,7 @@ public class DatabaseManager {
         }
     }
 
-    // Competition Management
+    // swimapp.backend.Competition Management
 
     public void registerSwimmerForCompetition(int competitionID, int swimmerID) throws SQLException {
         String query = "INSERT INTO CompetitionSwimmers (competitionID, swimmerID) VALUES (?, ?)";

@@ -1,3 +1,5 @@
+package swimapp.backend;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
