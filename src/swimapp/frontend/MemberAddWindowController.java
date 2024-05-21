@@ -7,7 +7,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Alert.AlertType;
 import swimapp.backend.DatabaseManager;
+import swimapp.backend.Gender;
 import swimapp.backend.Member;
+import swimapp.backend.MembershipType;
 import swimapp.frontend.Main;
 
 import java.io.IOException;
@@ -48,7 +50,7 @@ public class MemberAddWindowController {
             LocalDate birthday = LocalDate.parse(birthdayStr, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
             boolean isPassive = !btn_NmTypeToggle.isSelected();
 
-            Member member = new Member(name, birthday, isPassive);
+            Member member = new Member(name, Gender.MALE,birthday,isPassive);
             dbManager.addMember(member);
 
             // Clear the fields after adding the member

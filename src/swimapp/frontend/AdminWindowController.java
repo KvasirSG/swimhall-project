@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import swimapp.backend.DatabaseManager;
+import swimapp.backend.GuiInterface;
 import swimapp.backend.Member;
 import swimapp.backend.MembershipType;
 import swimapp.frontend.Main;
@@ -54,7 +55,7 @@ public class AdminWindowController {
 
     private void showPassiveMembers() {
         listView.getItems().clear();
-        List<Member> members = dbManager.getMembersByType(MembershipType.PASSIVE);
+        List<Member> members = GuiInterface.getMembersByType(MembershipType.PASSIVE);
         for (Member member : members) {
             listView.getItems().add(member.toString());
         }
@@ -62,9 +63,9 @@ public class AdminWindowController {
 
     private void showActiveMembers() {
         listView.getItems().clear();
-        List<Member> members = dbManager.getMembersByType(MembershipType.ADULT);
-        members.addAll(dbManager.getMembersByType(MembershipType.JUNIOR));
-        members.addAll(dbManager.getMembersByType(MembershipType.SENIOR));
+        List<Member> members = GuiInterface.getMembersByType(MembershipType.ADULT);
+        members.addAll(GuiInterface.getMembersByType(MembershipType.JUNIOR));
+        members.addAll(GuiInterface.getMembersByType(MembershipType.SENIOR));
         for (Member member : members) {
             listView.getItems().add(member.toString());
         }
