@@ -15,7 +15,7 @@
                 <Button fx:id="btn_Back" layoutY="374.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="BACK" />
             <Accordion prefWidth="115.0">
               <panes>
-                <TitledPane fx:id="acdn_T1" animated="false" text="TEAM 1">
+                <TitledPane fx:id="acdn_T1" animated="false" prefHeight="100.0" prefWidth="224.0" text="TEAM 1">
                      <content>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
@@ -53,7 +53,7 @@
                         </AnchorPane>
                      </content>
                   </TitledPane>
-                <TitledPane fx:id="acdn_T2" animated="false" text="TEAM 2">
+                <TitledPane fx:id="acdn_T2" animated="false" prefHeight="150.0" prefWidth="224.0" text="TEAM 2">
                      <content>
                         <AnchorPane prefHeight="300.0" prefWidth="135.0">
                            <children>
@@ -94,6 +94,8 @@
                   </TitledPane>
               </panes>
             </Accordion>
+            <Button layoutY="324.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="ADD RECORD" />
+            <Button layoutY="349.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="COMPETITION" />
             </children>
         </AnchorPane>
     </left>
