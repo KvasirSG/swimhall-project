@@ -24,10 +24,10 @@ public class Record {
         this.time = time;
         this.date = date;
     }
+
     public int getRecordID() {
         return recordID;
     }
-
     public int getSwimmerID() {
         return swimmerID;
     }
@@ -43,7 +43,6 @@ public class Record {
     public double getTime() {
         return time;
     }
-
     public LocalDate getDate() {
         return date;
     }

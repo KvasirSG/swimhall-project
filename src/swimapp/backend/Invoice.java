@@ -10,17 +10,19 @@ public class Invoice {
     private boolean paid; // New attribute to track whether the invoice is paid
     private LocalDate dueDate;
 
-    public Invoice(double amount, long invoiceID, int memberID, boolean isPaid) {
+    public Invoice(double amount, long invoiceID, int memberID, boolean isPaid, LocalDate dueDate) {
         this.amount = amount;
         this.invoiceID = invoiceID;
         this.memberID = memberID;
         this.paid = isPaid;
+        this.dueDate = dueDate;
     }
-    public Invoice(double amount, int memberID) {
+    public Invoice(double amount, int memberID, LocalDate dueDate) {
         this.amount = amount;
         this.invoiceID = 0;
         this.memberID = memberID;
         this.paid = false; // Initialize paid status as false
+        this.dueDate = dueDate;
     }
 
     public int getMemberID() {
@@ -65,5 +67,9 @@ public class Invoice {
 
     public void setDueDate(LocalDate dueDate){
         this.dueDate = dueDate;
+    }
+
+    public void registerInvoice(DatabaseManager dbManager){
+        dbManager.addInvoice(this);
     }
 }

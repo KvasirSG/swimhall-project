@@ -8,16 +8,16 @@ public class Swimmer extends Member {
     private int teamID;
     private List<Discipline> disciplines;
 
-    public Swimmer (int memberID, String name, LocalDate birthday,MembershipType membershipType, DatabaseManager dBmanager)
+    public Swimmer (int memberID, String name, Gender gender,  LocalDate birthday,MembershipType membershipType, DatabaseManager dBmanager)
     {
-        super(memberID, name, birthday, membershipType);
+        super(memberID, name,gender, birthday, membershipType);
         if(this.SwimmerID !=0){
             disciplines = dBmanager.getDisciplinesForSwimmer(this.SwimmerID);
         }
     }
-    public Swimmer (int swimmerID, int memberID, String name, LocalDate birthday,MembershipType membershipType)
+    public Swimmer (int swimmerID, int memberID, String name, Gender gender, LocalDate birthday,MembershipType membershipType)
     {
-        super(memberID, name, birthday, membershipType);
+        super(memberID, name, gender , birthday, membershipType);
         this.SwimmerID = swimmerID;
         disciplines = new ArrayList<>();
     }
@@ -59,6 +59,22 @@ public class Swimmer extends Member {
         return bestResults;
     }
 
+    public List<Record> getBestRecordPerDiscipline(DatabaseManager databaseManager){
+        List<Record> allRecords = databaseManager.getPerformanceRecordsForSwimmer(this.SwimmerID);
+        List<Record> bestRecords = new ArrayList<>();
+        for (Discipline discipline : disciplines){
+            List<Record> tempRecords = new ArrayList<>();
+            for (Record record : allRecords){
+                if (record.getDisciplineID()== discipline.getDisciplineID()){
+                    tempRecords.add(record);
+                }
+            }
+            Optional<Record> bestTime = tempRecords.stream().min(Comparator.comparingDouble(Record::getTime));
+            bestRecords.add(bestTime.orElse(null));
+        }
+        return bestRecords;
+    }
+
     public void registerSwimmer(DatabaseManager dBManager, Boolean newMember){
         if (newMember){
             dBManager.addNewSwimmer(this,this.teamID);
@@ -66,6 +82,15 @@ public class Swimmer extends Member {
             this.SwimmerID = dBManager.addSwimmerFromExistingMember(this.getMemberID(),this.teamID);
         }
 
+    }
+
+    public void remove(DatabaseManager dbManager, boolean asMember){
+        if (asMember){
+            dbManager.removeSwimmer(this.getSwimmerID());
+            dbManager.deleteMember(this.getMemberID());
+        } else {
+            dbManager.removeSwimmer(this.getSwimmerID());
+        }
     }
 
     public void setTeamID(int teamID) {

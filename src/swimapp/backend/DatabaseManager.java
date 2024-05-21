@@ -50,11 +50,12 @@ public class DatabaseManager {
      */
     public void addMember(Member member) {
         int memberID = 0;
-        String sql = "INSERT INTO Members (name, birthday, membershipTypeID) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Members (name, gender, birthday, membershipTypeID) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, member.getName());
-            statement.setDate(2, Date.valueOf(member.getBirthDate()));
-            statement.setInt(3, member.getMembershipTypeID());
+            statement.setString(2,member.getGender().name());
+            statement.setDate(3, Date.valueOf(member.getBirthDate()));
+            statement.setInt(4, member.getMembershipTypeID());
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
@@ -75,7 +76,7 @@ public class DatabaseManager {
      * @return the retrieved member, or null if not found
      */
     public Member getMember(int memberID) {
-        String sql = "SELECT Members.memberID, Members.name, Members.birthday, Members.membershipTypeID, " +
+        String sql = "SELECT Members.memberID, Members.name, Members.gender, Members.birthday, Members.membershipTypeID, " +
                 "MembershipTypes.description, MembershipTypes.fee " +
                 "FROM Members " +
                 "JOIN MembershipTypes ON Members.membershipTypeID = MembershipTypes.typeID " +
@@ -89,13 +90,14 @@ public class DatabaseManager {
             if (rs.next()) {
                 int retrievedID = rs.getInt("memberID");
                 String name = rs.getString("name");
+                Gender gender = Gender.valueOf(rs.getString("gender"));
                 LocalDate birthday = rs.getDate("birthday").toLocalDate();
                 int membershipTypeID = rs.getInt("membershipTypeID");
                 String description = rs.getString("description");
                 double fee = rs.getDouble("fee");
 
                 MembershipType membershipType = new MembershipType(membershipTypeID, description, fee);
-                return new Member(retrievedID, name, birthday, membershipType);
+                return new Member(retrievedID, name, gender, birthday, membershipType);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -109,7 +111,7 @@ public class DatabaseManager {
      */
     public List<Member> getAllMembers() {
         List<Member> members = new ArrayList<>();
-        String sql = "SELECT Members.memberID, Members.name, Members.birthday, Members.membershipTypeID, " +
+        String sql = "SELECT Members.memberID, Members.name, Members.gender, Members.birthday, Members.membershipTypeID, " +
                 "MembershipTypes.description, MembershipTypes.fee " +
                 "FROM Members " +
                 "JOIN MembershipTypes ON Members.membershipTypeID = MembershipTypes.typeID ";
@@ -121,18 +123,59 @@ public class DatabaseManager {
             while (rs.next()) {
                 int memberID = rs.getInt("memberID");
                 String name = rs.getString("name");
+                Gender gender = Gender.valueOf(rs.getString("gender"));
                 LocalDate birthday = rs.getDate("birthday").toLocalDate();
                 int membershipTypeID = rs.getInt("membershipTypeID");
                 String description = rs.getString("description");
                 double fee = rs.getDouble("fee");
                 MembershipType membershipType = new MembershipType(membershipTypeID, description, fee);
-                members.add(new Member(memberID, name, birthday, membershipType));
+                members.add(new Member(memberID, name, gender, birthday, membershipType));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return members;
     }
+
+    public void deleteMember(int memberID){
+        String sql = "DELETE FROM Members WHERE memberID = ?";
+
+        try(PreparedStatement pstmt = connection.prepareStatement(sql)){
+            pstmt.setInt(1, memberID);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("swimapp.backend.Member deleted successfuly!");
+            } else {
+                System.out.println("Could not find member with ID: " + memberID);
+            }
+
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updateMember(Member member){
+        String sql = "UPDATE Members SET name = ?, gender = ?, birthday = ?, membershipTypeID = ? WHERE memberID = ?";
+
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1, member.getName());
+            statement.setString(2, member.getGender().name());
+            statement.setDate(3, Date.valueOf(member.getBirthday()));
+            statement.setInt(4, member.getMembershipTypeID());
+            statement.setInt(5, member.getMemberID());
+
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("swimapp.backend.Member updated successfuly!");
+            } else {
+                System.out.println("Could not find member with ID: " + member.getMemberID());
+            }
+
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
 
     // Membership Management
 
@@ -226,7 +269,7 @@ public class DatabaseManager {
 
         String sql = "INSERT INTO Swimmers (memberID, teamID) VALUES (?, ?)";
 
-        Member member = new Member(swimmer.getName(),swimmer.getBirthday(),false);
+        Member member = new Member(swimmer.getName(),swimmer.getGender(),swimmer.getBirthday(),false);
         addMember(member);
         int memberID = member.getMemberID();
         swimmer.setMemberID(memberID);
@@ -286,7 +329,7 @@ public class DatabaseManager {
      * @return the retrieved swimmer, or null if not found
      */
     public Swimmer getSwimmer(int swimmerID){
-        String sql = "SELECT Swimmers.swimmerID, Swimmers.teamID, Members.memberID, Members.name, Members.birthday, Members.membershipTypeID, MembershipTypes.description, MembershipTypes.fee " +
+        String sql = "SELECT Swimmers.swimmerID, Swimmers.teamID, Members.memberID, Members.name, Members.gender, Members.birthday, Members.membershipTypeID, MembershipTypes.description, MembershipTypes.fee " +
                 "FROM Swimmers " +
                 "JOIN Members ON Swimmers.memberID = Members.memberID" +
                 "LEFT JOIN MembershipTypes ON Members.membershipTypeID = MembershipTypes.membershipTypeID" +
@@ -300,12 +343,13 @@ public class DatabaseManager {
                 int teamID = rs.getInt("teamID");
                 int memberID = rs.getInt("memberID");
                 String name = rs.getString("name");
+                Gender gender = Gender.valueOf(rs.getString("gender"));
                 LocalDate birthday = rs.getDate("birthday").toLocalDate();
                 int membershipTypeID = rs.getInt("membershipTypeID");
                 String description = rs.getString("description");
                 double fee = rs.getDouble("fee");
 
-                swimmer = new Swimmer(swimmerID,memberID,name,birthday,new MembershipType(membershipTypeID,description,fee));
+                swimmer = new Swimmer(swimmerID,memberID,name, gender,birthday,new MembershipType(membershipTypeID,description,fee));
             }
         }catch (SQLException e){
             System.out.println("Error retrieving swimmer: " + e.getMessage());
@@ -318,7 +362,7 @@ public class DatabaseManager {
      * @return a list of all swimmers
      */
     public List<Swimmer> getSwimmers(){
-        String sql = "SELECT Swimmers.swimmerID, Swimmers.teamID, Members.memberID, Members.name, Members.birthday, Members.membershipTypeID, MembershipTypes.description, MembershipTypes.fee " +
+        String sql = "SELECT Swimmers.swimmerID, Swimmers.teamID, Members.memberID, Members.name, Members.gender, Members.birthday, Members.membershipTypeID, MembershipTypes.description, MembershipTypes.fee " +
                 "FROM Swimmers " +
                 "JOIN Members ON Swimmers.memberID = Members.memberID" +
                 "LEFT JOIN MembershipTypes ON Members.membershipTypeID = MembershipTypes.membershipTypeID";
@@ -331,12 +375,13 @@ public class DatabaseManager {
                 int teamID = rs.getInt("teamID");
                 int memberID = rs.getInt("memberID");
                 String name = rs.getString("name");
+                Gender gender = Gender.valueOf(rs.getString("gender"));
                 LocalDate birthday = rs.getDate("birthday").toLocalDate();
                 int membershipTypeID = rs.getInt("membershipTypeID");
                 String description = rs.getString("description");
                 double fee = rs.getDouble("fee");
 
-                Swimmer swimmer = new Swimmer(swimmerID,memberID,name,birthday,new MembershipType(membershipTypeID,description,fee));
+                Swimmer swimmer = new Swimmer(swimmerID,memberID,name, gender,birthday,new MembershipType(membershipTypeID,description,fee));
                 swimmers.add(swimmer);
 
             }
@@ -344,6 +389,23 @@ public class DatabaseManager {
             System.out.println("Error retrieving swimmers: " + e.getMessage());
         }
         return swimmers;
+    }
+
+    public void removeSwimmer(int swimmerID){
+        String sql = "DELETE FROM Swimmers WHERE swimmerID = ?";
+
+        try(PreparedStatement pstmt = connection.prepareStatement(sql)){
+            pstmt.setInt(1, swimmerID);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("swimapp.backend.Swimmer deleted successfuly!");
+            } else {
+                System.out.println("Could not find swimmer with ID: " + swimmerID);
+            }
+
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     // swimapp.backend.Discipline Management
@@ -380,6 +442,19 @@ public class DatabaseManager {
             pstmt.executeUpdate();
         }catch (SQLException e){
             System.out.println("Error adding discipline to swimmer: " + e.getMessage());
+        }
+    }
+
+    public void removeSwimmerDiscipline(int swimmerID, int disciplineID){
+        String sql ="DELETE FROM SwimmersDisciplines " +
+                "WHERE swimmerID = ? AND disciplineID = ?";
+        try(PreparedStatement pstmt = connection.prepareStatement(sql)){
+            pstmt.setInt(1,swimmerID);
+            pstmt.setInt(2, disciplineID);
+            pstmt.executeUpdate();
+
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
         }
     }
 
@@ -506,6 +581,141 @@ public class DatabaseManager {
         }
         return records;
     }
+
+    // swimapp.backend.Invoice Management
+
+    public void addInvoice(Invoice invoice){
+        String sql = "INSERT INTO Invoice (amount, memberID, paid, dueDate) VALUES (?, ?, ?, ?)";
+        try(PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setDouble(1, invoice.getAmount());
+            pstmt.setInt(2,invoice.getMemberID());
+            pstmt.setBoolean(3,invoice.isPaid());
+            pstmt.setDate(4,Date.valueOf(invoice.getDueDate()));
+            int Affected = pstmt.executeUpdate();
+            if (Affected==1){
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()){
+                    invoice.setInvoiceID(rs.getInt(1));
+                }
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    public List<Invoice> getInvoicesForMember(int memberID){
+        List<Invoice> invoices = new ArrayList<>();
+        String sql = "SELECT * FROM Invoice WHERE memberID = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, memberID);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                long invoiceID = resultSet.getLong("invoiceID");
+                double amount = resultSet.getDouble("amount");
+                boolean paid = resultSet.getBoolean("paid");
+                LocalDate dueDate = resultSet.getDate("dueDate").toLocalDate();
+                invoices.add(new Invoice(amount, invoiceID, memberID, paid, dueDate));
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return invoices;
+    }
+
+    public void markInvoiceAsPaid(long invoiceID){
+        String sql = "UPDATE Invoice SET paid = ? WHERE invoiceID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBoolean(1, true);
+            statement.setLong(2, invoiceID);
+            statement.executeUpdate();
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // swimapp.backend.Competition Management
+
+    public void registerSwimmerForCompetition(int competitionID, int swimmerID) throws SQLException {
+        String query = "INSERT INTO CompetitionSwimmers (competitionID, swimmerID) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, competitionID);
+            stmt.setInt(2, swimmerID);
+            stmt.executeUpdate();
+        }
+    }
+
+    public void recordResult(int competitionID, int swimmerID, int placement, double time) throws SQLException {
+        String query = "INSERT INTO Results (competitionID, swimmerID, placement, time) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, competitionID);
+            stmt.setInt(2, swimmerID);
+            stmt.setInt(3, placement);
+            stmt.setDouble(4, time);
+            stmt.executeUpdate();
+        }
+    }
+
+    public List<Swimmer> getSwimmersForTeam(int teamID) throws SQLException {
+        String query = "SELECT s.swimmerID, m.memberID, m.name, m.gender, m.birthday, m.membershipTypeID " +
+                "FROM Swimmers s " +
+                "JOIN Members m ON s.memberID = m.memberID " +
+                "WHERE s.teamID = ?";
+        List<Swimmer> swimmers = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, teamID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int swimmerID = rs.getInt("swimmerID");
+                int memberID = rs.getInt("memberID");
+                String name = rs.getString("name");
+                Gender gender = Gender.valueOf(rs.getString("gender").toUpperCase());
+                LocalDate birthday = rs.getDate("birthday").toLocalDate();
+                int membershipTypeID = rs.getInt("membershipTypeID");
+                MembershipType membershipType = getMembershipType(membershipTypeID);
+                Swimmer swimmer = new Swimmer(swimmerID, memberID, name, gender, birthday, membershipType);
+                swimmers.add(swimmer);
+            }
+        }
+
+        return swimmers;
+    }
+
+    public List<Competition> getCompetitionsForTeam(int teamID) throws SQLException {
+        String query = "SELECT c.competitionID, c.date, c.location, c.compName " +
+                "FROM Competitions c " +
+                "JOIN TeamCompetitions tc ON c.competitionID = tc.competitionID " +
+                "WHERE tc.teamID = ?";
+        List<Competition> competitions = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, teamID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int competitionID = rs.getInt("competitionID");
+                LocalDate date = rs.getDate("date").toLocalDate();
+                String location = rs.getString("location");
+                String compName = rs.getString("compName");
+                Competition competition = new Competition(competitionID, date, location, compName);
+                competitions.add(competition);
+            }
+        }
+
+        return competitions;
+    }
+
+    public void addTeamToCompetition(int teamID, int competitionID) throws SQLException {
+        String query = "INSERT INTO TeamCompetitions (teamID, competitionID) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, teamID);
+            stmt.setInt(2, competitionID);
+            stmt.executeUpdate();
+        }
+    }
+
 
     // DB Connection Management
 
