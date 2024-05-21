@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import swimapp.backend.DatabaseManager;
+import swimapp.backend.GuiInterface;
 import swimapp.backend.Member;
 import swimapp.backend.MembershipType;
 import swimapp.frontend.Main;
@@ -23,7 +24,7 @@ public class AdminWindowController {
     private Button btn_admMbAdd;
 
     @FXML
-    private Button btn_Back;
+    private Button btn_admBack;
 
     @FXML
     private Button btn_admMbActive;
@@ -31,22 +32,19 @@ public class AdminWindowController {
     @FXML
     private ListView<String> listView;
 
-    private DatabaseManager dbManager;
-
     @FXML
     public void initialize() {
-        dbManager = new DatabaseManager();
-
         btn_admMbShow.setOnAction(event -> showMembers());
         btn_admMbPassive.setOnAction(event -> showPassiveMembers());
         btn_admMbAdd.setOnAction(event -> openAddMemberWindow());
         btn_admMbActive.setOnAction(event -> showActiveMembers());
-        btn_Back.setOnAction(event -> goBack());
+        btn_admBack.setOnAction(event -> goBack());
     }
 
     private void showMembers() {
         listView.getItems().clear();
-        List<Member> members = dbManager.getAllMembers();
+
+        List<Member> members = GuiInterface.getAllMembers();
         for (Member member : members) {
             listView.getItems().add(member.toString());
         }
@@ -54,7 +52,7 @@ public class AdminWindowController {
 
     private void showPassiveMembers() {
         listView.getItems().clear();
-        List<Member> members = dbManager.getMembersByType(MembershipType.PASSIVE);
+        List<Member> members = GuiInterface.getMembersByType(MembershipType.PASSIVE);
         for (Member member : members) {
             listView.getItems().add(member.toString());
         }
@@ -62,9 +60,9 @@ public class AdminWindowController {
 
     private void showActiveMembers() {
         listView.getItems().clear();
-        List<Member> members = dbManager.getMembersByType(MembershipType.ADULT);
-        members.addAll(dbManager.getMembersByType(MembershipType.JUNIOR));
-        members.addAll(dbManager.getMembersByType(MembershipType.SENIOR));
+        List<Member> members = GuiInterface.getMembersByType(MembershipType.ADULT);
+        members.addAll(GuiInterface.getMembersByType(MembershipType.JUNIOR));
+        members.addAll(GuiInterface.getMembersByType(MembershipType.SENIOR));
         for (Member member : members) {
             listView.getItems().add(member.toString());
         }

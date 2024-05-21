@@ -1,13 +1,13 @@
 package swimapp.frontend;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.text.Text;
 import swimapp.backend.DatabaseManager;
+import swimapp.backend.Gender;
 import swimapp.backend.Member;
+import swimapp.backend.MembershipType;
 import swimapp.frontend.Main;
 
 import java.io.IOException;
@@ -16,6 +16,8 @@ import java.time.format.DateTimeFormatter;
 
 public class MemberAddWindowController {
 
+    @FXML
+    private ComboBox<String> genderComboBox;
     @FXML
     private Button btn_NmBack;
 
@@ -31,12 +33,21 @@ public class MemberAddWindowController {
     @FXML
     private ToggleButton btn_NmTypeToggle;
 
+    @FXML
+    private Text selectedGenderText;
+
     private DatabaseManager dbManager;
+
+    private Gender selectedGenderToEnum;
 
     @FXML
     public void initialize() {
-        dbManager = new DatabaseManager();
-
+        genderComboBox.getItems().addAll(Gender.MALE.name(), Gender.FEMALE.name());
+        genderComboBox.setOnAction(event -> {
+            String selectedGender = genderComboBox.getSelectionModel().getSelectedItem();
+            selectedGenderText.setText("Selected Gender: " + selectedGender);
+            selectedGenderToEnum = Gender.valueOf(selectedGender);
+        });
         btn_NmBack.setOnAction(event -> goBack());
         btn_NmCreate.setOnAction(event -> addMember());
     }
@@ -48,7 +59,7 @@ public class MemberAddWindowController {
             LocalDate birthday = LocalDate.parse(birthdayStr, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
             boolean isPassive = !btn_NmTypeToggle.isSelected();
 
-            Member member = new Member(name, birthday, isPassive);
+            Member member = new Member(name, selectedGenderToEnum,birthday,isPassive);
             dbManager.addMember(member);
 
             // Clear the fields after adding the member

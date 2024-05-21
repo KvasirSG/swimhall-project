@@ -49,6 +49,14 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    public static void showTrainerWindow() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/swimapp/frontend/TrainerWindow.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        primaryStage.setTitle("Trainer Window");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
