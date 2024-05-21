@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Text?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <AnchorPane prefHeight="400.0" prefWidth="115.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="btn_NrBack" layoutY="375.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="BACK" />
+            <Separator layoutX="115.0" orientation="VERTICAL" prefHeight="400.0" />
+         </children>
+      </AnchorPane>
+   </left>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="tf_Nr_SID" layoutY="80.0" />
+            <TextField fx:id="tf_Nr_DoR" layoutY="140.0" />
+            <TextField fx:id="tf_Nr_Nrt" layoutY="200.0" />
+            <Text layoutX="3.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Swimmer ID: " />
+            <Text layoutX="3.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date of Record (yyyy/mm/dd)" />
+            <Text layoutX="3.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Record time:" />
+            <TextField fx:id="tf_Nr_Disc" layoutY="260.0" />
+            <Text layoutX="3.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Discipline:" />
+            <Text layoutX="161.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Record" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

@@ -13,7 +13,7 @@
    <left>
       <AnchorPane prefHeight="210.0" prefWidth="115.0" BorderPane.alignment="CENTER">
          <children>
-            <Button layoutY="374.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="BACK" />
+            <Button fx:id="btn_NmBack" layoutY="374.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="BACK" />
             <Separator layoutX="115.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="10.0" />
          </children>
       </AnchorPane>
@@ -21,14 +21,15 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField layoutY="80.0" />
+            <TextField fx:id="tf_NmName" layoutY="80.0" />
             <Text layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Member name:" />
-            <TextField layoutY="140.0" />
+            <TextField fx:id="tf_NmBday" layoutY="140.0" />
             <Text layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Member birthday (yyyy/mm/dd)" />
-            <ToggleButton layoutX="164.0" layoutY="200.0" mnemonicParsing="false" text="Active/Inactive" />
-            <TextField layoutY="200.0" />
+            <ToggleButton fx:id="btn_NmTypeToggle" layoutX="164.0" layoutY="200.0" mnemonicParsing="false" text="Active/Inactive" />
+            <TextField fx:id="tf_NmMtype" layoutY="200.0" />
             <Text layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Member type (Use toggle button)" />
             <Text layoutX="126.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Adding new member: " />
+            <Button fx:id="btn_Nm_Create" layoutY="247.0" mnemonicParsing="false" text="Create Member" />
          </children>
       </AnchorPane>
    </center>
