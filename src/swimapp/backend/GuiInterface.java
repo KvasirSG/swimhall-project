@@ -22,4 +22,13 @@ public class GuiInterface {
         db.closeConnection();
         return dbAllMembers;
     }
+
+    public static List<Member> getMembersInArrears(){
+        DatabaseManager db = new DatabaseManager();
+        Payments payments = new Payments();
+        List<Member> dbAllMembers= payments.getMembersInArrears(db);
+        db.closeConnection();
+        return dbAllMembers;
+    }
+
 }

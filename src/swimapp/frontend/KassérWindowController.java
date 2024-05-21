@@ -3,10 +3,7 @@ package swimapp.frontend;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import swimapp.backend.Payments;
-import swimapp.backend.DatabaseManager;
-import swimapp.backend.Member;
-import swimapp.backend.Invoice;
+import swimapp.backend.*;
 import swimapp.frontend.Main;
 
 import java.io.IOException;
@@ -34,7 +31,6 @@ public class KassérWindowController {
 
     @FXML
     public void initialize() {
-        payments = new Payments();
         dbManager = new DatabaseManager(); // Assuming you have a default constructor
 
         btn_trsMemShow.setOnAction(event -> showMembers());
@@ -45,7 +41,7 @@ public class KassérWindowController {
 
     private void showMembers() {
         listView.getItems().clear();
-        List<Member> members = payments.getMembers();
+        List<Member> members = GuiInterface.getAllMembers();
         for (Member member : members) {
             listView.getItems().add(member.toString());
         }
@@ -53,7 +49,7 @@ public class KassérWindowController {
 
     private void showArrears() {
         listView.getItems().clear();
-        List<Member> membersInArrears = payments.getMembersInArrears(dbManager);
+        List<Member> membersInArrears = GuiInterface.getMembersInArrears();
         for (Member member : membersInArrears) {
             listView.getItems().add(member.toString());
         }
