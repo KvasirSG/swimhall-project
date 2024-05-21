@@ -24,7 +24,7 @@ public class AdminWindowController {
     private Button btn_admMbAdd;
 
     @FXML
-    private Button btn_Back;
+    private Button btn_admBack;
 
     @FXML
     private Button btn_admMbActive;
@@ -32,22 +32,19 @@ public class AdminWindowController {
     @FXML
     private ListView<String> listView;
 
-    private DatabaseManager dbManager;
-
     @FXML
     public void initialize() {
-        dbManager = new DatabaseManager();
-
         btn_admMbShow.setOnAction(event -> showMembers());
         btn_admMbPassive.setOnAction(event -> showPassiveMembers());
         btn_admMbAdd.setOnAction(event -> openAddMemberWindow());
         btn_admMbActive.setOnAction(event -> showActiveMembers());
-        btn_Back.setOnAction(event -> goBack());
+        btn_admBack.setOnAction(event -> goBack());
     }
 
     private void showMembers() {
         listView.getItems().clear();
-        List<Member> members = dbManager.getAllMembers();
+
+        List<Member> members = GuiInterface.getAllMembers();
         for (Member member : members) {
             listView.getItems().add(member.toString());
         }

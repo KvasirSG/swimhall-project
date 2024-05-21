@@ -24,7 +24,7 @@ public class KassérWindowController {
     private Button btn_trsPay;
 
     @FXML
-    private Button btn_Back;
+    private Button btn_trnBack;
 
     @FXML
     private ListView<String> listView;
@@ -40,7 +40,7 @@ public class KassérWindowController {
         btn_trsMemShow.setOnAction(event -> showMembers());
         btn_trsArrShow.setOnAction(event -> showArrears());
         btn_trsPay.setOnAction(event -> makePayment());
-        btn_Back.setOnAction(event -> goBack());
+        btn_trnBack.setOnAction(event -> goBack());
     }
 
     private void showMembers() {

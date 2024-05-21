@@ -5,9 +5,7 @@ import java.util.List;
 
 public class GuiInterface {
     public static List<Member> getMembersByType(int membershipTypeID){
-        DatabaseManager db = new DatabaseManager();
-        List<Member> dbAllMembers= db.getAllMembers();
-        db.closeConnection();
+        List<Member> dbAllMembers= getAllMembers();
         List<Member> dbAllMembersType= new ArrayList<Member>();
 
         for(Member member : dbAllMembers){
@@ -16,5 +14,12 @@ public class GuiInterface {
             }
         }
         return dbAllMembersType;
+    }
+
+    public static List<Member> getAllMembers(){
+        DatabaseManager db = new DatabaseManager();
+        List<Member> dbAllMembers= db.getAllMembers();
+        db.closeConnection();
+        return dbAllMembers;
     }
 }
