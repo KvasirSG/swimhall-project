@@ -7,7 +7,6 @@ import swimapp.backend.Payments;
 import swimapp.backend.DatabaseManager;
 import swimapp.backend.Member;
 import swimapp.backend.Invoice;
-import swimapp.frontend.Main;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +23,7 @@ public class KassérWindowController {
     private Button btn_trsPay;
 
     @FXML
-    private Button btn_trnBack;
+    private Button btn_trsBack;
 
     @FXML
     private ListView<String> listView;
@@ -40,7 +39,7 @@ public class KassérWindowController {
         btn_trsMemShow.setOnAction(event -> showMembers());
         btn_trsArrShow.setOnAction(event -> showArrears());
         btn_trsPay.setOnAction(event -> makePayment());
-        btn_trnBack.setOnAction(event -> goBack());
+        btn_trsBack.setOnAction(event -> goBack());
     }
 
     private void showMembers() {

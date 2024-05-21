@@ -13,7 +13,7 @@
                 <Button fx:id="btn_trsMemShow" layoutY="-1.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="115.0" text="MEMBERS" />
                 <Button fx:id="btn_trsArrShow" layoutY="29.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="115.0" text="ARREARS" />
                 <Button fx:id="btn_trsPay" layoutY="59.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="115.0" text="PAYMENT" />
-                <Button fx:id="btn_Back" layoutY="374.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="BACK" />
+                <Button fx:id="btn_trsBack" layoutY="374.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="BACK" />
             </children>
         </AnchorPane>
     </left>
@@ -24,4 +24,3 @@
         <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
     </center>
 </BorderPane>
-
