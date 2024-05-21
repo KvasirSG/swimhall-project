@@ -3,14 +3,26 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages database operations for a swimming club management system.
+ * Handles connections, and operations related to members, swimmers, memberships, disciplines, and performance records.
+ */
 public class DatabaseManager {
 
     private Connection connection;
     private String databaseUrl = "jdbc:sqlite:swim-db";
+
+    /**
+     * Constructs a DatabaseManager and initializes a connection to the database.
+     */
     public DatabaseManager() {
         connect(databaseUrl);
     }
 
+    /**
+     * Establishes a connection to the specified database URL.
+     * @param databaseUrl the URL of the database to connect to
+     */
     private void connect(String databaseUrl) {
         try {
             this.connection = DriverManager.getConnection(databaseUrl);
@@ -19,13 +31,21 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Retrieves the auto-commit mode for the current database connection.
+     * @return true if the connection is in auto-commit mode, false otherwise.
+     * @throws SQLException if a database access error occurs
+     */
     public boolean getAutoCommit() throws SQLException {
         return connection.getAutoCommit();
     }
 
-    /* ============================================================
-    MEMBER MANAGEMENT
-     =============================================================*/
+    // Member Management
+
+    /**
+     * Adds a new member to the database.
+     * @param member the member to add
+     */
     public void addMember(Member member) {
         int memberID = 0;
         String sql = "INSERT INTO Members (name, birthday, membershipTypeID) VALUES (?, ?, ?)";
@@ -47,6 +67,11 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Retrieves a member from the database based on member ID.
+     * @param memberID the ID of the member to retrieve
+     * @return the retrieved member, or null if not found
+     */
     public Member getMember(int memberID) {
         String sql = "SELECT Members.memberID, Members.name, Members.birthday, Members.membershipTypeID, " +
                 "MembershipTypes.description, MembershipTypes.fee " +
@@ -76,6 +101,10 @@ public class DatabaseManager {
         return null;
     }
 
+    /**
+     * Retrieves all members from the database.
+     * @return a list of all members
+     */
     public List<Member> getAllMembers() {
         List<Member> members = new ArrayList<>();
         String sql = "SELECT Members.memberID, Members.name, Members.birthday, Members.membershipTypeID, " +
@@ -103,10 +132,13 @@ public class DatabaseManager {
         return members;
     }
 
-    /* ============================================================
-    MEMBERSHIP MANAGEMENT
-     =============================================================*/
+    // Membership Management
 
+    /**
+     * Updates the membership fee for a specific membership type.
+     * @param typeID the ID of the membership type to update
+     * @param newFee the new fee amount to set
+     */
     public void updateMembershipFee(int typeID, double newFee) {
         String sql = "UPDATE MembershipTypes SET fee = ? WHERE typeID = ?";
 
@@ -125,7 +157,11 @@ public class DatabaseManager {
         }
     }
 
-    // Method to retrieve a MembershipType based on typeID
+    /**
+     * Retrieves a membership type from the database based on its type ID.
+     * @param typeID the ID of the membership type to retrieve
+     * @return the retrieved membership type, or null if not found
+     */
     public MembershipType getMembershipType(int typeID) {
         String sql = "SELECT typeID, description, fee FROM MembershipTypes WHERE typeID = ?";
         MembershipType membershipType = null;
@@ -148,6 +184,11 @@ public class DatabaseManager {
         return membershipType;
     }
 
+    /**
+     * Retrieves the membership type for a specific member.
+     * @param memberID the ID of the member whose membership type is to be retrieved
+     * @return the membership type of the specified member, or null if not found
+     */
     public MembershipType getMembershipTypeForMember(int memberID) {
         String sql = "SELECT MembershipTypes.typeID, MembershipTypes.description, MembershipTypes.fee " +
                 "FROM MembershipTypes " +
@@ -172,10 +213,13 @@ public class DatabaseManager {
         return null;
     }
 
-    /* ============================================================
-    SWIMMER MANAGEMENT
-     =============================================================*/
+    // Swimmer Management
 
+    /**
+     * Adds a new swimmer to the database and assigns them to a team.
+     * @param swimmer the swimmer to add
+     * @param teamID the ID of the team to which the swimmer will be assigned
+     */
     public void addNewSwimmer(Swimmer swimmer, int teamID){
 
         String sql = "INSERT INTO Swimmers (memberID, teamID) VALUES (?, ?)";
@@ -206,6 +250,12 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Adds a swimmer to the database from an existing member and assigns them to a team.
+     * @param memberID the ID of the member who is to be added as a swimmer
+     * @param teamID the ID of the team to which the swimmer will be assigned
+     * @return the ID of the newly added swimmer, or 0 if the operation fails
+     */
     public int addSwimmerFromExistingMember(int memberID,int teamID){
         String sql = "INSERT INTO Swimmers (memberID, teamID) VALUES (?, ?)";
         int swimmerID=0;
@@ -228,6 +278,11 @@ public class DatabaseManager {
         return swimmerID;
     }
 
+    /**
+     * Retrieves a swimmer from the database based on the swimmer ID.
+     * @param swimmerID the ID of the swimmer to retrieve
+     * @return the retrieved swimmer, or null if not found
+     */
     public Swimmer getSwimmer(int swimmerID){
         String sql = "SELECT Swimmers.swimmerID, Swimmers.teamID, Members.memberID, Members.name, Members.birthday, Members.membershipTypeID, MembershipTypes.description, MembershipTypes.fee " +
                 "FROM Swimmers " +
@@ -256,6 +311,10 @@ public class DatabaseManager {
         return swimmer;
     }
 
+    /**
+     * Retrieves all swimmers from the database.
+     * @return a list of all swimmers
+     */
     public List<Swimmer> getSwimmers(){
         String sql = "SELECT Swimmers.swimmerID, Swimmers.teamID, Members.memberID, Members.name, Members.birthday, Members.membershipTypeID, MembershipTypes.description, MembershipTypes.fee " +
                 "FROM Swimmers " +
@@ -285,10 +344,12 @@ public class DatabaseManager {
         return swimmers;
     }
 
-    /* ============================================================
-    DISCIPLINE MANAGEMENT
-     =============================================================*/
+    // Discipline Management
 
+    /**
+     * Adds a new discipline to the database.
+     * @param name the name of the discipline to add
+     */
     public void addDiscipline(String name){
         String sql = "INSERT INTO Disciplines (name) VALUES (?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -304,6 +365,11 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Adds a discipline to a specific swimmer in the database.
+     * @param swimmerID the ID of the swimmer
+     * @param disciplineID the ID of the discipline to be added
+     */
     public void addSwimmerDiscipline(int swimmerID, int disciplineID){
         String sql = "INSERT INTO SwimmerDisciplines (swimmerID, disciplineID) VALUES (?, ?)";
         try(PreparedStatement pstmt = connection.prepareStatement(sql)){
@@ -315,6 +381,11 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Retrieves a discipline from the database based on the discipline ID.
+     * @param disciplineID the ID of the discipline to retrieve
+     * @return the retrieved discipline, or null if not found
+     */
     public Discipline getDiscipline(int disciplineID){
         String sql = "SELECT d.disciplineID, d.name FROM Disciplines d " +
                 "WHERE d.disciplineID = ?";
@@ -334,6 +405,10 @@ public class DatabaseManager {
         return discipline;
     }
 
+    /**
+     * Retrieves all disciplines from the database.
+     * @return a list of all disciplines
+     */
     public List<Discipline> getDisciplines(){
         String sql = "SELECT d.disciplineID, d.name FROM Disciplines d";
         List<Discipline> disciplines = new ArrayList<>();
@@ -353,7 +428,11 @@ public class DatabaseManager {
         return disciplines;
     }
 
-    // Method to get all disciplines for a specific swimmer
+    /**
+     * Retrieves all disciplines for a specific swimmer.
+     * @param swimmerID the ID of the swimmer whose disciplines are to be retrieved
+     * @return a list of disciplines associated with the specified swimmer
+     */
     public List<Discipline> getDisciplinesForSwimmer(int swimmerID) {
         List<Discipline> disciplines = new ArrayList<>();
         String sql = "SELECT d.disciplineID, d.name FROM Disciplines d " +
@@ -375,11 +454,12 @@ public class DatabaseManager {
         return disciplines;
     }
 
-    /* ============================================================
-    RECORD MANAGEMENT
-     =============================================================*/
+    // Record Management
 
-    // Method to add a new performance record
+    /**
+     * Adds a new performance record to the database.
+     * @param record the performance record to add
+     */
     public void addPerformanceRecord(Record record) {
         String sql = "INSERT INTO PerformanceRecords (swimmerID, disciplineID, time, date) VALUES (?, ?, ?, ?)";
 
@@ -399,6 +479,11 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Retrieves all performance records for a specific swimmer.
+     * @param swimmerID the ID of the swimmer whose records are to be retrieved
+     * @return a list of performance records for the specified swimmer
+     */
     public List<Record> getPerformanceRecordsForSwimmer(int swimmerID) {
         List<Record> records = new ArrayList<>();
         String sql = "SELECT pr.time, pr.date, pr.disciplineID " +
@@ -420,11 +505,11 @@ public class DatabaseManager {
         return records;
     }
 
-    /* ============================================================
-    DB CONNECTION MANAGEMENT
-     =============================================================*/
+    // DB Connection Management
 
-    // Method to close the database connection
+    /**
+     * Closes the database connection if it is open.
+     */
     public void closeConnection() {
         try {
             if (this.connection != null && !this.connection.isClosed()) {
@@ -436,6 +521,9 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Reconnects to the database if the connection has been closed.
+     */
     public void reconnect(){
         try{
             if (this.connection != null && this.connection.isClosed()){
