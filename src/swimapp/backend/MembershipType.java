@@ -34,4 +34,9 @@ public class MembershipType {
         this.fee = amount;
         dbManager.updateMembershipFee(this.typeID,amount);
     }
+
+    @Override
+    public String toString() {
+        return description;
+    }
 }
