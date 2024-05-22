@@ -258,6 +258,23 @@ public class DatabaseManager {
         return null;
     }
 
+    public List<MembershipType> getMembershipTypes(){
+        String sql = "SELECT * from MembershipTypes";
+        List<MembershipType> tempTypes = new ArrayList<>();
+        try( PreparedStatement pstmt = connection.prepareStatement(sql)){
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()){
+                int typeID = rs.getInt("typeID");
+                String description = rs.getString("description");
+                double fee = rs.getDouble("fee");
+                tempTypes.add(new MembershipType(typeID, description, fee));
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return tempTypes;
+    }
+
     // swimapp.backend.Swimmer Management
 
     /**
@@ -531,6 +548,34 @@ public class DatabaseManager {
         return disciplines;
     }
 
+    public List<Swimmer> getSwimmersByDiscipline(int disciplineID) {
+        List<Swimmer> swimmers = new ArrayList<>();
+        String sql = "SELECT S.swimmerID, M.memberID, M.name AS memberName, M.birthday, M.gender, MT.typeID, MT.description AS membershipDescription, MT.fee, D.name AS disciplineName " +
+                "FROM Swimmers S " +
+                "JOIN Members M ON S.memberID = M.memberID " +
+                "JOIN MembershipTypes MT ON M.membershipTypeID = MT.typeID " +
+                "JOIN SwimmersDisciplines SD ON S.swimmerID = SD.swimmerID " +
+                "JOIN Disciplines D ON SD.disciplineID = D.disciplineID " +
+                "WHERE D.disciplineID = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, disciplineID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int memberID = rs.getInt("memberID");
+                String name = rs.getString("memberName");
+                Gender gender = Gender.valueOf(rs.getString("gender"));
+                LocalDate birthday = rs.getDate("birthday").toLocalDate();
+                MembershipType membershipType = new MembershipType(rs.getInt("membershipTypeID"), rs.getString("description"), rs.getDouble("fee"));
+                int swimmerID = rs.getInt("swimmerID");
+                Swimmer swimmer = new Swimmer(swimmerID, memberID, name, gender, birthday, membershipType);
+                swimmers.add(swimmer);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return swimmers;
+    }
+
     // swimapp.backend.Record Management
 
     /**
@@ -658,7 +703,7 @@ public class DatabaseManager {
         }
     }
 
-    public List<Swimmer> getSwimmersForTeam(int teamID) throws SQLException {
+    public List<Swimmer> getSwimmersByTeam(int teamID) throws SQLException {
         String query = "SELECT s.swimmerID, m.memberID, m.name, m.gender, m.birthday, m.membershipTypeID " +
                 "FROM Swimmers s " +
                 "JOIN Members m ON s.memberID = m.memberID " +
@@ -683,6 +728,32 @@ public class DatabaseManager {
 
         return swimmers;
     }
+    public List<Swimmer> getSwimmersByTeamAndGender(int teamID, Gender gender) {
+        List<Swimmer> swimmers = new ArrayList<>();
+        String sql = "SELECT SELECT s.swimmerID, m.memberID, m.name, m.gender, m.birthday, m.membershipTypeID " +
+                "FROM Swimmers s " +
+                "JOIN Members m ON Swimmers.memberID = Members.memberID "+
+                "WHERE teamID = ? AND gender = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, teamID);
+            pstmt.setString(2, gender.name());
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int swimmerID = rs.getInt("swimmerID");
+                int memberID = rs.getInt("memberID");
+                String name = rs.getString("name");
+                LocalDate birthday = rs.getDate("birthday").toLocalDate();
+                MembershipType membershipType = new MembershipType(rs.getInt("membershipTypeID"), rs.getString("description"), rs.getDouble("fee"));
+                Swimmer swimmer = new Swimmer(swimmerID, memberID, name, gender, birthday, membershipType);
+                swimmers.add(swimmer);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return swimmers;
+    }
+
 
     public List<Competition> getCompetitionsForTeam(int teamID) throws SQLException {
         String query = "SELECT c.competitionID, c.date, c.location, c.compName " +
