@@ -13,9 +13,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static swimapp.backend.MembershipType.*;
+
 public class MemberAddWindowController {
 
-    public ComboBox combobox_NmMtype;
     @FXML
     private ComboBox<String> genderComboBox;
     @FXML
@@ -31,9 +32,6 @@ public class MemberAddWindowController {
     private TextField tf_NmBday;
 
     @FXML
-    private ToggleButton btn_NmTypeToggle;
-
-    @FXML
     private Text selectedGenderText;
 
     private Gender selectedGenderToEnum;
@@ -47,11 +45,6 @@ public class MemberAddWindowController {
             selectedGenderToEnum = Gender.valueOf(selectedGender);
         });
 
-        List<String>types = new ArrayList<>();
-        for (MembershipType membershipType: GuiInterface.getMembershipTypes()){
-
-        }
-        combobox_NmMtype.getItems().addAll();
         btn_NmBack.setOnAction(event -> goBack());
         btn_NmCreate.setOnAction(event -> addMember());
     }
@@ -61,7 +54,7 @@ public class MemberAddWindowController {
             String name = tf_NmName.getText();
             String birthdayStr = tf_NmBday.getText();
             LocalDate birthday = LocalDate.parse(birthdayStr, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-            boolean isPassive = !btn_NmTypeToggle.isSelected();
+            boolean isPassive = false;
 
             Member member = new Member(name, selectedGenderToEnum,birthday,isPassive);
             GuiInterface.addMember(member);
@@ -69,7 +62,6 @@ public class MemberAddWindowController {
             // Clear the fields after adding the member
             tf_NmName.clear();
             tf_NmBday.clear();
-            btn_NmTypeToggle.setSelected(false);
 
             // Provide confirmation to the user
             Alert alert = new Alert(AlertType.INFORMATION);
