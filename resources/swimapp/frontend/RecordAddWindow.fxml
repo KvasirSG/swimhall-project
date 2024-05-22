@@ -20,9 +20,9 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="tf_Nr_SID" layoutY="80.0" />
-            <TextField fx:id="tf_Nr_DoR" layoutY="140.0" />
-            <TextField fx:id="tf_Nr_Nrt" layoutY="200.0" />
+            <TextField fx:id="tf_NrSID" layoutY="80.0" />
+            <TextField fx:id="tf_NrDoR" layoutY="140.0" />
+            <TextField fx:id="tf_NrNrt" layoutY="200.0" />
             <Text layoutX="3.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Swimmer ID: " />
             <Text layoutX="3.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date of Record (yyyy/mm/dd)" />
             <Text layoutX="3.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Record time:" />
