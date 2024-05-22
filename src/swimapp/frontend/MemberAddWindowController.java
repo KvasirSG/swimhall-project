@@ -4,18 +4,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Text;
-import swimapp.backend.DatabaseManager;
-import swimapp.backend.Gender;
-import swimapp.backend.Member;
-import swimapp.backend.MembershipType;
+import swimapp.backend.*;
 import swimapp.frontend.Main;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemberAddWindowController {
 
+    public ComboBox combobox_NmMtype;
     @FXML
     private ComboBox<String> genderComboBox;
     @FXML
@@ -36,8 +36,6 @@ public class MemberAddWindowController {
     @FXML
     private Text selectedGenderText;
 
-    private DatabaseManager dbManager;
-
     private Gender selectedGenderToEnum;
 
     @FXML
@@ -48,6 +46,12 @@ public class MemberAddWindowController {
             selectedGenderText.setText("Selected Gender: " + selectedGender);
             selectedGenderToEnum = Gender.valueOf(selectedGender);
         });
+
+        List<String>types = new ArrayList<>();
+        for (MembershipType membershipType: GuiInterface.getMembershipTypes()){
+
+        }
+        combobox_NmMtype.getItems().addAll();
         btn_NmBack.setOnAction(event -> goBack());
         btn_NmCreate.setOnAction(event -> addMember());
     }
@@ -60,7 +64,7 @@ public class MemberAddWindowController {
             boolean isPassive = !btn_NmTypeToggle.isSelected();
 
             Member member = new Member(name, selectedGenderToEnum,birthday,isPassive);
-            dbManager.addMember(member);
+            GuiInterface.addMember(member);
 
             // Clear the fields after adding the member
             tf_NmName.clear();
