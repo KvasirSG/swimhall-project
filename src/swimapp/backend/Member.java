@@ -30,6 +30,7 @@ public class Member {
         this.birthday = birthday;
         this.age = calculateAge();
         this.membershipType = membershipType;
+        this.membershipTypeID = membershipType.getTypeID();
     }
     /**
      * Gets the members's ID .
@@ -145,4 +146,11 @@ public class Member {
     public Gender getGender() {
         return gender;
     }
+
+    public String toString() {
+        return String.format("Member ID: %d | Name: %s | Gender: %s | Birthday: %s | Age: %d | Membership: %s",
+                memberID, name, gender, birthday, age, (membershipType != null ? membershipType.getDescription() : "None"));
+    }
 }
+
+
