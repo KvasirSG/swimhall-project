@@ -9,11 +9,11 @@ import java.io.IOException;
 public class TrainerWindowController {
 
     @FXML
-    private Button btn_Back;
+    private Button btn_trnBack;
 
     @FXML
     public void initialize() {
-        btn_Back.setOnAction(event -> goBack());
+        btn_trnBack.setOnAction(event -> goBack());
     }
 
     private void goBack() {
