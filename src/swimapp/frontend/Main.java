@@ -57,7 +57,7 @@ public class Main extends Application {
         primaryStage.show();
     }
     public static void showAddRecordWindow() throws IOException {
-        FXMLLoader fxmlLoader = FXMLLoader.load(Main.class.getResource("/swimapp/frontend/RecordAddWindow.fxml"));
+        FXMLLoader fxmlLoader = new  FXMLLoader(Main.class.getResource("/swimapp/frontend/RecordAddWindow.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         primaryStage.setTitle("Add Record Window");
         primaryStage.setScene(scene);

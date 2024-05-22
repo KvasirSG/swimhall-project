@@ -23,10 +23,10 @@ public class TrainerWindowController {
     private Button btn_AddRecord;
 
     @FXML
-    private Accordion acdn_T1;
+    private TitledPane acdn_T1;
 
     @FXML
-    private Accordion acdn_T2;
+    private TitledPane acdn_T2;
 
     @FXML
     private TitledPane acdn_T1M;
@@ -167,26 +167,38 @@ public class TrainerWindowController {
     }
 
     private void showTeamMembers(int teamID) throws SQLException {
-        listView.getItems().clear();
-        List<Swimmer> swimmers = dbManager.getSwimmersByTeam(teamID);
-        for (Swimmer swimmer : swimmers) {
-            listView.getItems().add(swimmer.getName());
+        try {
+            listView.getItems().clear();
+            List<Swimmer> swimmers = dbManager.getSwimmersByTeam(teamID);
+            for (Swimmer swimmer : swimmers) {
+                listView.getItems().add(swimmer.getName());
+            }
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 
     private void showTeamGenderMembers(int teamID, Gender gender) {
-        listView.getItems().clear();
-        List<Swimmer> swimmers = dbManager.getSwimmersByTeamAndGender(teamID, gender);
-        for (Swimmer swimmer : swimmers) {
-            listView.getItems().add(swimmer.getName());
+        try {
+            listView.getItems().clear();
+            List<Swimmer> swimmers = dbManager.getSwimmersByTeamAndGender(teamID, gender);
+            for (Swimmer swimmer : swimmers) {
+                listView.getItems().add(swimmer.getName());
+            }
+        } catch ( NullPointerException e){
+            e.printStackTrace();
         }
     }
 
     private void showDisciplineMembers(int disciplineID) {
-        listView.getItems().clear();
-        List<Swimmer> swimmers = dbManager.getSwimmersByDiscipline(disciplineID);
-        for (Swimmer swimmer : swimmers) {
-            listView.getItems().add(swimmer.getName() + " - Time: " + GuiInterface.getBestRecordForSwimmerByDiscipline(swimmer.getSwimmerID(), disciplineID).getTime());
+        try {
+            listView.getItems().clear();
+            List<Swimmer> swimmers = dbManager.getSwimmersByDiscipline(disciplineID);
+            for (Swimmer swimmer : swimmers) {
+                listView.getItems().add(swimmer.getName() + " - Time: " + GuiInterface.getBestRecordForSwimmerByDiscipline(swimmer.getSwimmerID(), disciplineID).getTime());
+            }
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
     private void showAddRecordWindow() {
