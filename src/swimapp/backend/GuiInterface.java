@@ -31,4 +31,29 @@ public class GuiInterface {
         return dbAllMembers;
     }
 
+    public static void addMember(Member member){
+        DatabaseManager db = new DatabaseManager();
+        db.addMember(member);
+        db.closeConnection();
+    }
+
+    public static List<MembershipType> getMembershipTypes(){
+        DatabaseManager db = new DatabaseManager();
+        List<MembershipType> types = db.getMembershipTypes();
+        db.closeConnection();
+        return types;
+    }
+
+    public static Record getBestRecordForSwimmerByDiscipline(int swimmerID, int disciplineID){
+        DatabaseManager db = new DatabaseManager();
+        Record record=null;
+        Swimmer swimmer = db.getSwimmer(swimmerID);
+        for (Record dbRecord:swimmer.getBestRecordPerDiscipline(db)){
+            if (dbRecord.getDisciplineID() == disciplineID){
+                record = dbRecord;
+            }
+        }
+        return record;
+    }
+
 }
