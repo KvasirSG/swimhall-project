@@ -169,7 +169,7 @@ public class TrainerWindowController {
     private void showTeamMembers(int teamID) throws SQLException {
         try {
             listView.getItems().clear();
-            List<Swimmer> swimmers = dbManager.getSwimmersByTeam(teamID);
+            List<Swimmer> swimmers = GuiInterface.getSwimmersByTeam(teamID);
             for (Swimmer swimmer : swimmers) {
                 listView.getItems().add(swimmer.getName());
             }
@@ -181,7 +181,7 @@ public class TrainerWindowController {
     private void showTeamGenderMembers(int teamID, Gender gender) {
         try {
             listView.getItems().clear();
-            List<Swimmer> swimmers = dbManager.getSwimmersByTeamAndGender(teamID, gender);
+            List<Swimmer> swimmers = GuiInterface.getSwimmersByTeamAndGender(teamID, gender);
             for (Swimmer swimmer : swimmers) {
                 listView.getItems().add(swimmer.getName());
             }
@@ -193,7 +193,7 @@ public class TrainerWindowController {
     private void showDisciplineMembers(int disciplineID) {
         try {
             listView.getItems().clear();
-            List<Swimmer> swimmers = dbManager.getSwimmersByDiscipline(disciplineID);
+            List<Swimmer> swimmers = GuiInterface.getSwimmersByDiscipline(disciplineID);
             for (Swimmer swimmer : swimmers) {
                 listView.getItems().add(swimmer.getName() + " - Time: " + GuiInterface.getBestRecordForSwimmerByDiscipline(swimmer.getSwimmerID(), disciplineID).getTime());
             }
