@@ -4,10 +4,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.text.Text;
 import swimapp.backend.DatabaseManager;
+import swimapp.backend.Discipline;
 import swimapp.backend.Record;
-import swimapp.frontend.Main;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -17,6 +17,9 @@ public class RecordAddWindowController {
 
     @FXML
     private Button btn_NrBack;
+
+    @FXML
+    private Button btn_NrAdd;
 
     @FXML
     private TextField tf_NrSID;
@@ -37,25 +40,29 @@ public class RecordAddWindowController {
         dbManager = new DatabaseManager();
 
         btn_NrBack.setOnAction(event -> goBack());
+        //btn_NrAdd.setOnAction(event -> addRecord());
     }
 
-    @FXML
-    private void createRecord() {
+   /** private void addRecord() {
         try {
             int swimmerID = Integer.parseInt(tf_NrSID.getText());
-            LocalDate dateOfRecord = LocalDate.parse(tf_NrDoR.getText(), DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+            String disciplineName = tf_Nr_Disc.getText();
             double newRecordTime = Double.parseDouble(tf_NrNrt.getText());
-            int disciplineID = Integer.parseInt(tf_Nr_Disc.getText());
+            String dateOfRecordStr = tf_NrDoR.getText();
+            LocalDate dateOfRecord = LocalDate.parse(dateOfRecordStr, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 
-            Record newRecord = new Record(swimmerID, disciplineID, newRecordTime, dateOfRecord);
-            dbManager.addPerformanceRecord(newRecord);
+            Discipline discipline = dbManager.getDisciplineByID(disciplineID);
+            if (discipline == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Discipline not found: " + disciplineName);
+                alert.showAndWait();
+                return;
+            }
 
-            // Provide confirmation to the user
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Record Created");
-            alert.setHeaderText(null);
-            alert.setContentText("New record for swimmer ID " + swimmerID + " has been successfully created.");
-            alert.showAndWait();
+            Record record = new Record(swimmerID, discipline.getDisciplineID(), newRecordTime, dateOfRecord);
+            dbManager.addPerformanceRecord(record);
 
             // Clear the fields after adding the record
             tf_NrSID.clear();
@@ -63,14 +70,21 @@ public class RecordAddWindowController {
             tf_NrNrt.clear();
             tf_Nr_Disc.clear();
 
+            // Provide confirmation to the user
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Record Added");
+            alert.setHeaderText(null);
+            alert.setContentText("Record for Swimmer ID " + swimmerID + " in discipline " + disciplineName + " has been successfully added.");
+            alert.showAndWait();
+
         } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
-            alert.setContentText("Error creating record: " + e.getMessage());
+            alert.setContentText("Error adding record: " + e.getMessage());
             alert.showAndWait();
         }
-    }
+    }**/
 
     private void goBack() {
         try {

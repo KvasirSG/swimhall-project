@@ -1,8 +1,13 @@
 package swimapp.frontend;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import swimapp.backend.DatabaseManager;
 import swimapp.backend.GuiInterface;
 import swimapp.backend.Member;
@@ -30,7 +35,7 @@ public class AdminWindowController {
     private Button btn_admMbActive;
 
     @FXML
-    private ListView<String> listView;
+    private ListView<Member> lst_admMemList;
 
     @FXML
     public void initialize() {
@@ -42,29 +47,42 @@ public class AdminWindowController {
     }
 
     private void showMembers() {
-        listView.getItems().clear();
+        lst_admMemList.getItems().clear();
 
         List<Member> members = GuiInterface.getAllMembers();
         for (Member member : members) {
-            listView.getItems().add(member.toString());
+            lst_admMemList.getItems().add(member);
         }
+
+        // Add event listener for ListView selection changes
+        lst_admMemList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                try {
+                    openMemberDetailWindow(newValue);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
     }
 
     private void showPassiveMembers() {
-        listView.getItems().clear();
+        lst_admMemList.getItems().clear();
         List<Member> members = GuiInterface.getMembersByType(MembershipType.PASSIVE);
         for (Member member : members) {
-            listView.getItems().add(member.toString());
+            lst_admMemList.getItems().add(member);
         }
     }
 
     private void showActiveMembers() {
-        listView.getItems().clear();
+        lst_admMemList.getItems().clear();
         List<Member> members = GuiInterface.getMembersByType(MembershipType.ADULT);
         members.addAll(GuiInterface.getMembersByType(MembershipType.JUNIOR));
         members.addAll(GuiInterface.getMembersByType(MembershipType.SENIOR));
         for (Member member : members) {
-            listView.getItems().add(member.toString());
+            lst_admMemList.getItems().add(member);
         }
     }
 
@@ -82,5 +100,20 @@ public class AdminWindowController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void openMemberDetailWindow(Member member) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/swimapp/frontend/AdmMemberDetail.fxml"));
+        Parent root = loader.load();
+
+        // Get the controller and set the member
+        AdmMemberDetailController controller = loader.getController();
+        controller.setMember(member);
+
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Member Details");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 }
