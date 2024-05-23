@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.ComboBox?>
 <BorderPane fx:controller="swimapp.frontend.RecordAddWindowController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <AnchorPane prefHeight="400.0" prefWidth="115.0" BorderPane.alignment="CENTER">
@@ -25,7 +26,7 @@
             <Text layoutX="3.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Swimmer ID: " />
             <Text layoutX="3.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date of Record (yyyy/mm/dd)" />
             <Text layoutX="3.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Record time:" />
-            <TextField fx:id="tf_Nr_Disc" layoutY="260.0" />
+            <ComboBox fx:id="cb_NrDisc" layoutY="260.0"/>
             <Text layoutX="3.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Discipline:" />
             <Text layoutX="161.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Record" />
             <Button fx:id="btn_NrAdd" layoutY="304.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="Add Record" />
