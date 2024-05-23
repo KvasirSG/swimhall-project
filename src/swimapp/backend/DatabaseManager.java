@@ -627,6 +627,22 @@ public class DatabaseManager {
         return records;
     }
 
+    public Discipline getDisciplineByID(int disciplineID) {
+        String sql = "SELECT disciplineID, name FROM Disciplines WHERE disciplineID = ?";
+        Discipline discipline = null;
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, disciplineID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                String name = rs.getString("name");
+                discipline = new Discipline(disciplineID, name);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving discipline: " + e.getMessage());
+        }
+        return discipline;
+    }
+
     // swimapp.backend.Invoice Management
 
     public void addInvoice(Invoice invoice){
