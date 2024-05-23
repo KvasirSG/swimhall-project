@@ -29,7 +29,7 @@ public class CompetitionWindowController
     private TextField tf_CDISC;
 
     @FXML
-    private DatePicker tf_CDATE;
+    private TextField tf_CDATE;
 
     @FXML
     private TextField tf_CLOC;
@@ -55,14 +55,14 @@ public class CompetitionWindowController
     }
 
     @FXML
-    private void createRecord() {
+    private void createCompetition() {
         try {
             int competitionID = Integer.parseInt(tf_CCID.getText());
             int swimmerID = Integer.parseInt(tf_CSID.getText());
             int disciplineID = Integer.parseInt(tf_CDISC.getText());
             LocalDate dateOfRecord = LocalDate.parse(tf_CDATE.getText(), DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-            double newRecordTime = Double.parseDouble(tf_NrNrt.getText());
-            int disciplineID = Integer.parseInt(tf_Nr_Disc.getText());
+
+            //Nedstående skal ændres - taget fra RecordADDWINDOWCONTROLLER
 
             Record newRecord = new Record(swimmerID, disciplineID, newRecordTime, dateOfRecord);
             dbManager.addPerformanceRecord(newRecord);
