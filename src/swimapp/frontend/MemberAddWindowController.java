@@ -54,28 +54,24 @@ public class MemberAddWindowController {
             String name = tf_NmName.getText();
             String birthdayStr = tf_NmBday.getText();
             LocalDate birthday = LocalDate.parse(birthdayStr, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-            boolean isPassive = false; // Adjust this based on your application logic
+            boolean isPassive = false;
 
-            DatabaseManager dbManager = new DatabaseManager();
-            Member member = new Member(name, selectedGenderToEnum, birthday, isPassive);
-
-            dbManager.addMember(member);
+            Member member = new Member(name, selectedGenderToEnum,birthday,isPassive);
+            GuiInterface.addMember(member);
 
             // Clear the fields after adding the member
             tf_NmName.clear();
             tf_NmBday.clear();
-            genderComboBox.getSelectionModel().clearSelection();
-            selectedGenderText.setText("");
 
             // Provide confirmation to the user
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Member Created");
             alert.setHeaderText(null);
             alert.setContentText("Member " + member.getName() + " has been successfully created.");
             alert.showAndWait();
 
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
             alert.setContentText("Error adding member: " + e.getMessage());
