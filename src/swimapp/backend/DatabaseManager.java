@@ -348,8 +348,8 @@ public class DatabaseManager {
     public Swimmer getSwimmer(int swimmerID){
         String sql = "SELECT Swimmers.swimmerID, Swimmers.teamID, Members.memberID, Members.name, Members.gender, Members.birthday, Members.membershipTypeID, MembershipTypes.description, MembershipTypes.fee " +
                 "FROM Swimmers " +
-                "JOIN Members ON Swimmers.memberID = Members.memberID" +
-                "LEFT JOIN MembershipTypes ON Members.membershipTypeID = MembershipTypes.membershipTypeID" +
+                "JOIN Members ON Swimmers.memberID = Members.memberID " +
+                "LEFT JOIN MembershipTypes ON Members.membershipTypeID = MembershipTypes.typeID " +
                 "WHERE Swimmers.swimmerID = ?";
         Swimmer swimmer = null;
         try(PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -452,7 +452,7 @@ public class DatabaseManager {
      * @param disciplineID the ID of the discipline to be added
      */
     public void addSwimmerDiscipline(int swimmerID, int disciplineID){
-        String sql = "INSERT INTO SwimmerDisciplines (swimmerID, disciplineID) VALUES (?, ?)";
+        String sql = "INSERT INTO SwimmersDisciplines (swimmerID, disciplineID) VALUES (?, ?)";
         try(PreparedStatement pstmt = connection.prepareStatement(sql)){
             pstmt.setInt(1, swimmerID);
             pstmt.setInt(2, disciplineID);
@@ -530,7 +530,7 @@ public class DatabaseManager {
     public List<Discipline> getDisciplinesForSwimmer(int swimmerID) {
         List<Discipline> disciplines = new ArrayList<>();
         String sql = "SELECT d.disciplineID, d.name FROM Disciplines d " +
-                "JOIN SwimmerDisciplines sd ON d.disciplinesID = sd.disciplineID " +
+                "JOIN SwimmersDisciplines sd ON d.disciplineID = sd.disciplineID " +
                 "WHERE sd.swimmerID = ?";
 
         try(PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -550,7 +550,7 @@ public class DatabaseManager {
 
     public List<Swimmer> getSwimmersByDiscipline(int disciplineID) {
         List<Swimmer> swimmers = new ArrayList<>();
-        String sql = "SELECT S.swimmerID, M.memberID, M.name AS memberName, M.birthday, M.gender, MT.typeID, MT.description AS membershipDescription, MT.fee, D.name AS disciplineName " +
+        String sql = "SELECT S.swimmerID, M.memberID, M.name AS memberName, M.birthday, M.gender, M.membershipTypeID, MT.typeID, MT.description AS membershipDescription, MT.fee, D.name AS disciplineName " +
                 "FROM Swimmers S " +
                 "JOIN Members M ON S.memberID = M.memberID " +
                 "JOIN MembershipTypes MT ON M.membershipTypeID = MT.typeID " +
@@ -565,7 +565,7 @@ public class DatabaseManager {
                 String name = rs.getString("memberName");
                 Gender gender = Gender.valueOf(rs.getString("gender"));
                 LocalDate birthday = rs.getDate("birthday").toLocalDate();
-                MembershipType membershipType = new MembershipType(rs.getInt("membershipTypeID"), rs.getString("description"), rs.getDouble("fee"));
+                MembershipType membershipType = new MembershipType(rs.getInt("membershipTypeID"), rs.getString("membershipDescription"), rs.getDouble("fee"));
                 int swimmerID = rs.getInt("swimmerID");
                 Swimmer swimmer = new Swimmer(swimmerID, memberID, name, gender, birthday, membershipType);
                 swimmers.add(swimmer);
@@ -615,7 +615,7 @@ public class DatabaseManager {
             pstmt.setInt(1, swimmerID);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                int disciplineID = rs.getInt("disciplineID ");
+                int disciplineID = rs.getInt("disciplineID");
                 double time = rs.getDouble("time");
                 LocalDate date = rs.getDate("date").toLocalDate();
                 Record record = new Record(swimmerID,disciplineID,time,date);
@@ -746,9 +746,10 @@ public class DatabaseManager {
     }
     public List<Swimmer> getSwimmersByTeamAndGender(int teamID, Gender gender) {
         List<Swimmer> swimmers = new ArrayList<>();
-        String sql = "SELECT SELECT s.swimmerID, m.memberID, m.name, m.gender, m.birthday, m.membershipTypeID " +
+        String sql = "SELECT s.swimmerID, m.memberID, m.name, m.gender, m.birthday, m.membershipTypeID, mt.description, mt.fee " +
                 "FROM Swimmers s " +
-                "JOIN Members m ON Swimmers.memberID = Members.memberID "+
+                "JOIN Members m ON s.memberID = m.memberID "+
+                "Join MembershipTypes mt on m.membershipTypeID = mt.typeID " +
                 "WHERE teamID = ? AND gender = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
