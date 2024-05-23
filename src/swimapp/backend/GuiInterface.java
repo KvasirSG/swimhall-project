@@ -1,5 +1,6 @@
 package swimapp.backend;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,34 @@ public class GuiInterface {
             }
         }
         return dbAllMembersType;
+    }
+
+    public static List<Swimmer> getSwimmersByTeam(int teamID) throws SQLException {
+        DatabaseManager db = new DatabaseManager();
+        List<Swimmer> swimmers = db.getSwimmersByTeam(teamID);
+        db.closeConnection();
+        return swimmers;
+    }
+
+    public static List<Swimmer> getSwimmersByTeamAndGender(int teamID, Gender gender) {
+        DatabaseManager db = new DatabaseManager();
+        List<Swimmer> swimmers = db.getSwimmersByTeamAndGender(teamID,gender);
+        db.closeConnection();
+        return swimmers;
+    }
+
+    public Discipline getDisciplineByID(int disciplineID){
+        DatabaseManager db = new DatabaseManager();
+        Discipline discipline = db.getDiscipline(disciplineID);
+        db.closeConnection();
+        return discipline;
+    }
+
+    public static List<Swimmer> getSwimmersByDiscipline(int disciplineID){
+        DatabaseManager db = new DatabaseManager();
+        List<Swimmer> swimmers = db.getSwimmersByDiscipline(disciplineID);
+        db.closeConnection();
+        return swimmers;
     }
 
     public static List<Member> getAllMembers(){
