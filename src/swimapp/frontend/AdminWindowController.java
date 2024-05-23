@@ -30,7 +30,7 @@ public class AdminWindowController {
     private Button btn_admMbActive;
 
     @FXML
-    private ListView<String> listView;
+    private ListView<String> lst_admMemList;
 
     @FXML
     public void initialize() {
@@ -42,29 +42,29 @@ public class AdminWindowController {
     }
 
     private void showMembers() {
-        listView.getItems().clear();
+        lst_admMemList.getItems().clear();
 
         List<Member> members = GuiInterface.getAllMembers();
         for (Member member : members) {
-            listView.getItems().add(member.toString());
+            lst_admMemList.getItems().add(member.toString());
         }
     }
 
     private void showPassiveMembers() {
-        listView.getItems().clear();
+        lst_admMemList.getItems().clear();
         List<Member> members = GuiInterface.getMembersByType(MembershipType.PASSIVE);
         for (Member member : members) {
-            listView.getItems().add(member.toString());
+            lst_admMemList.getItems().add(member.toString());
         }
     }
 
     private void showActiveMembers() {
-        listView.getItems().clear();
+        lst_admMemList.getItems().clear();
         List<Member> members = GuiInterface.getMembersByType(MembershipType.ADULT);
         members.addAll(GuiInterface.getMembersByType(MembershipType.JUNIOR));
         members.addAll(GuiInterface.getMembersByType(MembershipType.SENIOR));
         for (Member member : members) {
-            listView.getItems().add(member.toString());
+            lst_admMemList.getItems().add(member.toString());
         }
     }
 
