@@ -36,6 +36,12 @@ public class Swimmer extends Member {
         dBManager.addSwimmerDiscipline(this.getSwimmerID(),discipline.getDisciplineID());
     }
 
+    public List<Discipline> getDisciplines(DatabaseManager dBManager){
+        List<Discipline> disciplineList = dBManager.getDisciplinesForSwimmer(this.SwimmerID);
+        disciplines = disciplineList;
+        return disciplineList;
+    }
+
     public void updatePerformance(Discipline discipline, double result, LocalDate date, DatabaseManager dBManager)
     {
         discipline.updateRecord(this, result, date, dBManager);
@@ -61,6 +67,7 @@ public class Swimmer extends Member {
 
     public List<Record> getBestRecordPerDiscipline(DatabaseManager databaseManager){
         List<Record> allRecords = databaseManager.getPerformanceRecordsForSwimmer(this.SwimmerID);
+        getDisciplines(databaseManager);
         List<Record> bestRecords = new ArrayList<>();
         for (Discipline discipline : disciplines){
             List<Record> tempRecords = new ArrayList<>();
