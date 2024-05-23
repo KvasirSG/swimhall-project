@@ -151,14 +151,6 @@ public class Member {
         return String.format("Member ID: %d | Name: %s | Gender: %s | Birthday: %s | Age: %d | Membership: %s",
                 memberID, name, gender, birthday, age, (membershipType != null ? membershipType.getDescription() : "None"));
     }
-
-    public void setMembershipTypeID(int membershipTypeID) {
-        this.membershipTypeID = membershipTypeID;
-        // Update the membershipType based on the ID (optional, depending on your application logic)
-        DatabaseManager dbManager = new DatabaseManager();
-        this.membershipType = dbManager.getMembershipType(membershipTypeID);
-        dbManager.closeConnection();
-    }
 }
 
 
