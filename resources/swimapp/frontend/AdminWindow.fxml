@@ -23,5 +23,6 @@
    </right>
    <center>
       <ListView fx:id="lst_admMemList" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+
    </center>
 </BorderPane>
