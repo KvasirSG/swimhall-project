@@ -2,9 +2,9 @@ package swimapp.frontend;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import swimapp.backend.DatabaseManager;
-import swimapp.backend.Gender;
 import swimapp.backend.Member;
 import swimapp.backend.MembershipType;
 
@@ -12,6 +12,8 @@ import java.time.format.DateTimeFormatter;
 
 public class AdmMemberDetailController {
 
+    @FXML
+    private Button btn_amdBack;
     @FXML
     private Label lbl_name;
     @FXML
@@ -35,13 +37,8 @@ public class AdmMemberDetailController {
     public void initialize() {
         dbManager = new DatabaseManager();
 
-        // Add event listener for the toggle button
-        btn_toggleMembershipStatus.setOnAction(event -> {
-            if (member != null) {
-                toggleMembershipStatus();
-                displayMemberDetails(); // Refresh displayed details
-            }
-        });
+        // Add event listener for the back button
+        btn_amdBack.setOnAction(event -> closeWindow());
     }
 
     private void displayMemberDetails() {
@@ -70,5 +67,10 @@ public class AdmMemberDetailController {
         } else {
             return MembershipType.JUNIOR;
         }
+    }
+
+    private void closeWindow() {
+        // Code to close the window
+        btn_amdBack.getScene().getWindow().hide();
     }
 }
