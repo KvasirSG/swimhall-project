@@ -3,24 +3,30 @@ package swimapp.frontend;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import swimapp.backend.DatabaseManager;
 import swimapp.backend.Record;
-import swimapp.frontend.Main;
+import swimapp.backend.Swimmer;
+import swimapp.backend.Discipline;
+import javafx.scene.control.Alert.AlertType;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class CompetitionWindowController
-{
+public class CompetitionWindowController {
+
     @FXML
     private Button btn_CBack;
 
     @FXML
+    private Button btn_CDesM;
+
+    @FXML
     private TextField tf_CCID;
+
+    @FXML
+    private TextField tf_CLOC;
 
     @FXML
     private TextField tf_CSID;
@@ -31,12 +37,6 @@ public class CompetitionWindowController
     @FXML
     private TextField tf_CDATE;
 
-    @FXML
-    private TextField tf_CLOC;
-
-    @FXML
-    private Button btn_CDesM;
-
     private DatabaseManager dbManager;
 
     @FXML
@@ -44,51 +44,57 @@ public class CompetitionWindowController
         dbManager = new DatabaseManager();
 
         btn_CBack.setOnAction(event -> goBack());
+        btn_CDesM.setOnAction(event -> designateMember());
     }
 
     private void goBack() {
         try {
-            Main.showTrainerWindow();
+            Main.showMainWindow();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @FXML
-    private void createCompetition() {
+    private void designateMember() {
         try {
             int competitionID = Integer.parseInt(tf_CCID.getText());
             int swimmerID = Integer.parseInt(tf_CSID.getText());
             int disciplineID = Integer.parseInt(tf_CDISC.getText());
-            LocalDate dateOfRecord = LocalDate.parse(tf_CDATE.getText(), DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+            String location = tf_CLOC.getText();
+            LocalDate date = LocalDate.parse(tf_CDATE.getText(), DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 
-            //Nedstående skal ændres - taget fra RecordADDWINDOWCONTROLLER
+            Swimmer swimmer = dbManager.getSwimmer(swimmerID);
+            if (swimmer == null) {
+                showAlert(AlertType.ERROR, "Error", "Swimmer not found", "The swimmer ID provided does not exist.");
+                return;
+            }
 
-            Record newRecord = new Record(swimmerID, disciplineID, newRecordTime, dateOfRecord);
-            dbManager.addPerformanceRecord(newRecord);
+            Discipline discipline = dbManager.getDiscipline(disciplineID);
+            if (discipline == null) {
+                showAlert(AlertType.ERROR, "Error", "Discipline not found", "The discipline ID provided does not exist.");
+                return;
+            }
 
-            // Provide confirmation to the user
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Record Created");
-            alert.setHeaderText(null);
-            alert.setContentText("New record for swimmer ID " + swimmerID + " has been successfully created.");
-            alert.showAndWait();
+            dbManager.registerSwimmerForCompetition(competitionID, swimmerID);
+            showAlert(AlertType.INFORMATION, "Success", "Swimmer Registered", "Swimmer " + swimmer.getName() + " has been successfully registered for the competition.");
 
-            // Clear the fields after adding the record
-            tf_NrSID.clear();
-            tf_NrDoR.clear();
-            tf_NrNrt.clear();
-            tf_Nr_Disc.clear();
+            // Clear the fields after registering the swimmer
+            tf_CCID.clear();
+            tf_CLOC.clear();
+            tf_CSID.clear();
+            tf_CDISC.clear();
+            tf_CDATE.clear();
 
         } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Error creating record: " + e.getMessage());
-            alert.showAndWait();
+            showAlert(AlertType.ERROR, "Error", "Error registering swimmer", e.getMessage());
         }
     }
 
-
-
+    private void showAlert(AlertType alertType, String title, String header, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 }

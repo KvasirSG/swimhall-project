@@ -21,6 +21,8 @@ public class TrainerWindowController {
     private Button btn_trnBack;
     @FXML
     private Button btn_AddRecord;
+    @FXML
+    private Button btn_CnShow;
 
     @FXML
     private TitledPane acdn_T1;
@@ -111,6 +113,7 @@ public class TrainerWindowController {
 
         btn_trnBack.setOnAction(event -> goBack());
         btn_AddRecord.setOnAction(event -> showAddRecordWindow());
+        btn_CnShow.setOnAction(event -> showCompetitionWindow());
 
         acdn_T1.setOnMouseClicked(event -> {
             try {
@@ -169,7 +172,7 @@ public class TrainerWindowController {
     private void showTeamMembers(int teamID) throws SQLException {
         try {
             listView.getItems().clear();
-            List<Swimmer> swimmers = GuiInterface.getSwimmersByTeam(teamID);
+            List<Swimmer> swimmers = dbManager.getSwimmersByTeam(teamID);
             for (Swimmer swimmer : swimmers) {
                 listView.getItems().add(swimmer.getName());
             }
@@ -181,7 +184,7 @@ public class TrainerWindowController {
     private void showTeamGenderMembers(int teamID, Gender gender) {
         try {
             listView.getItems().clear();
-            List<Swimmer> swimmers = GuiInterface.getSwimmersByTeamAndGender(teamID, gender);
+            List<Swimmer> swimmers = dbManager.getSwimmersByTeamAndGender(teamID, gender);
             for (Swimmer swimmer : swimmers) {
                 listView.getItems().add(swimmer.getName());
             }
@@ -193,7 +196,7 @@ public class TrainerWindowController {
     private void showDisciplineMembers(int disciplineID) {
         try {
             listView.getItems().clear();
-            List<Swimmer> swimmers = GuiInterface.getSwimmersByDiscipline(disciplineID);
+            List<Swimmer> swimmers = dbManager.getSwimmersByDiscipline(disciplineID);
             for (Swimmer swimmer : swimmers) {
                 listView.getItems().add(swimmer.getName() + " - Time: " + GuiInterface.getBestRecordForSwimmerByDiscipline(swimmer.getSwimmerID(), disciplineID).getTime());
             }
@@ -201,9 +204,18 @@ public class TrainerWindowController {
             e.printStackTrace();
         }
     }
+
     private void showAddRecordWindow() {
         try {
             Main.showAddRecordWindow();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showCompetitionWindow() {
+        try {
+            Main.showCompetitionWindow();
         } catch (IOException e) {
             e.printStackTrace();
         }

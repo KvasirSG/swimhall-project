@@ -13,89 +13,89 @@
         <AnchorPane prefHeight="400.0" prefWidth="115.0" BorderPane.alignment="CENTER">
             <children>
                 <Button fx:id="btn_trnBack" layoutY="374.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="BACK" />
-            <Accordion prefWidth="115.0">
-              <panes>
-                <TitledPane fx:id="acdn_T1" animated="false" prefHeight="100.0" prefWidth="224.0" text="TEAM 1">
-                     <content>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                           <children>
-                              <Accordion prefWidth="115.0">
-                                <panes>
-                                  <TitledPane fx:id="acdn_T1M" animated="false" text="MEN">
-                                       <content>
-                                          <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                             <children>
-                                                <Button fx:id="btn_T1MD1" mnemonicParsing="false" text="Discipline 1" />
-                                                <Button fx:id="btn_T1MD2" layoutY="25.0" mnemonicParsing="false" text="Discipline 2" />
-                                                <Button fx:id="btn_T1MD3" layoutY="50.0" mnemonicParsing="false" text="Discipline 3" />
-                                                <Button fx:id="btn_T1MD4" layoutY="75.0" mnemonicParsing="false" text="Discipline 4" />
-                                                <Button fx:id="btn_T1MD5" layoutY="100.0" mnemonicParsing="false" text="Discipline 5" />
-                                             </children>
-                                          </AnchorPane>
-                                       </content>
-                                    </TitledPane>
-                                  <TitledPane fx:id="acdn_T1W" animated="false" text="WOMEN">
-                                       <content>
-                                          <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                             <children>
-                                                <Button fx:id="btn_T1WD1" mnemonicParsing="false" text="Discipline 1" />
-                                                <Button fx:id="btn_T1WD2" layoutY="25.0" mnemonicParsing="false" text="Discipline 2" />
-                                                <Button fx:id="btn_T1WD3" layoutY="50.0" mnemonicParsing="false" text="Discipline 3" />
-                                                <Button fx:id="btn_T1WD4" layoutY="75.0" mnemonicParsing="false" text="Discipline 4" />
-                                                <Button fx:id="btn_T1WD5" layoutY="100.0" mnemonicParsing="false" text="Discipline 5" />
-                                             </children>
-                                          </AnchorPane>
-                                       </content>
-                                    </TitledPane>
-                                </panes>
-                              </Accordion>
-                           </children>
-                        </AnchorPane>
-                     </content>
-                  </TitledPane>
-                <TitledPane fx:id="acdn_T2" animated="false" prefHeight="150.0" prefWidth="224.0" text="TEAM 2">
-                     <content>
-                        <AnchorPane prefHeight="300.0" prefWidth="135.0">
-                           <children>
-                              <Accordion layoutY="-11.0" />
-                              <Accordion>
-                                <panes>
-                                  <TitledPane fx:id="acdn_T2M" animated="false" text="MEN">
-                                       <content>
-                                          <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                             <children>
-                                                <Button fx:id="btn_T2MD1" mnemonicParsing="false" text="Discipline 1" />
-                                                <Button fx:id="btn_T2MD2" layoutY="25.0" mnemonicParsing="false" text="Discipline 2" />
-                                                <Button fx:id="btn_T2MD3" layoutY="50.0" mnemonicParsing="false" text="Discipline 3" />
-                                                <Button fx:id="btn_T2MD4" layoutY="75.0" mnemonicParsing="false" text="Discipline 4" />
-                                                <Button fx:id="btn_T2MD5" layoutY="100.0" mnemonicParsing="false" text="Discipline 5" />
-                                             </children>
-                                          </AnchorPane>
-                                       </content>
-                                    </TitledPane>
-                                  <TitledPane fx:id="acdn_T2W" animated="false" text="WOMEN">
-                                       <content>
-                                          <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                             <children>
-                                                <Button fx:id="btn_T2WD1" mnemonicParsing="false" text="Discipline 1" />
-                                                <Button fx:id="btn_T2WD2" layoutY="25.0" mnemonicParsing="false" text="Discipline 2" />
-                                                <Button fx:id="btn_T2WD3" layoutY="50.0" mnemonicParsing="false" text="Discipline 3" />
-                                                <Button fx:id="btn_T2WD4" layoutY="75.0" mnemonicParsing="false" text="Discipline 4" />
-                                                <Button fx:id="btn_T2WD5" layoutY="100.0" mnemonicParsing="false" text="Discipline 5" />
-                                             </children>
-                                          </AnchorPane>
-                                       </content>
-                                    </TitledPane>
-                                </panes>
-                              </Accordion>
-                           </children>
-                        </AnchorPane>
-                     </content>
-                  </TitledPane>
-              </panes>
-            </Accordion>
-            <Button fx:id="btn_AddRecord" layoutY="324.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="ADD RECORD" />
-            <Button layoutY="349.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="COMPETITION" />
+                <Accordion prefWidth="115.0">
+                    <panes>
+                        <TitledPane fx:id="acdn_T1" animated="false" prefHeight="100.0" prefWidth="224.0" text="TEAM 1">
+                            <content>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Accordion prefWidth="115.0">
+                                            <panes>
+                                                <TitledPane fx:id="acdn_T1M" animated="false" text="MEN">
+                                                    <content>
+                                                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                            <children>
+                                                                <Button fx:id="btn_T1MD1" mnemonicParsing="false" text="Discipline 1" />
+                                                                <Button fx:id="btn_T1MD2" layoutY="25.0" mnemonicParsing="false" text="Discipline 2" />
+                                                                <Button fx:id="btn_T1MD3" layoutY="50.0" mnemonicParsing="false" text="Discipline 3" />
+                                                                <Button fx:id="btn_T1MD4" layoutY="75.0" mnemonicParsing="false" text="Discipline 4" />
+                                                                <Button fx:id="btn_T1MD5" layoutY="100.0" mnemonicParsing="false" text="Discipline 5" />
+                                                            </children>
+                                                        </AnchorPane>
+                                                    </content>
+                                                </TitledPane>
+                                                <TitledPane fx:id="acdn_T1W" animated="false" text="WOMEN">
+                                                    <content>
+                                                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                            <children>
+                                                                <Button fx:id="btn_T1WD1" mnemonicParsing="false" text="Discipline 1" />
+                                                                <Button fx:id="btn_T1WD2" layoutY="25.0" mnemonicParsing="false" text="Discipline 2" />
+                                                                <Button fx:id="btn_T1WD3" layoutY="50.0" mnemonicParsing="false" text="Discipline 3" />
+                                                                <Button fx:id="btn_T1WD4" layoutY="75.0" mnemonicParsing="false" text="Discipline 4" />
+                                                                <Button fx:id="btn_T1WD5" layoutY="100.0" mnemonicParsing="false" text="Discipline 5" />
+                                                            </children>
+                                                        </AnchorPane>
+                                                    </content>
+                                                </TitledPane>
+                                            </panes>
+                                        </Accordion>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </TitledPane>
+                        <TitledPane fx:id="acdn_T2" animated="false" prefHeight="150.0" prefWidth="224.0" text="TEAM 2">
+                            <content>
+                                <AnchorPane prefHeight="300.0" prefWidth="135.0">
+                                    <children>
+                                        <Accordion layoutY="-11.0" />
+                                        <Accordion>
+                                            <panes>
+                                                <TitledPane fx:id="acdn_T2M" animated="false" text="MEN">
+                                                    <content>
+                                                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                            <children>
+                                                                <Button fx:id="btn_T2MD1" mnemonicParsing="false" text="Discipline 1" />
+                                                                <Button fx:id="btn_T2MD2" layoutY="25.0" mnemonicParsing="false" text="Discipline 2" />
+                                                                <Button fx:id="btn_T2MD3" layoutY="50.0" mnemonicParsing="false" text="Discipline 3" />
+                                                                <Button fx:id="btn_T2MD4" layoutY="75.0" mnemonicParsing="false" text="Discipline 4" />
+                                                                <Button fx:id="btn_T2MD5" layoutY="100.0" mnemonicParsing="false" text="Discipline 5" />
+                                                            </children>
+                                                        </AnchorPane>
+                                                    </content>
+                                                </TitledPane>
+                                                <TitledPane fx:id="acdn_T2W" animated="false" text="WOMEN">
+                                                    <content>
+                                                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                            <children>
+                                                                <Button fx:id="btn_T2WD1" mnemonicParsing="false" text="Discipline 1" />
+                                                                <Button fx:id="btn_T2WD2" layoutY="25.0" mnemonicParsing="false" text="Discipline 2" />
+                                                                <Button fx:id="btn_T2WD3" layoutY="50.0" mnemonicParsing="false" text="Discipline 3" />
+                                                                <Button fx:id="btn_T2WD4" layoutY="75.0" mnemonicParsing="false" text="Discipline 4" />
+                                                                <Button fx:id="btn_T2WD5" layoutY="100.0" mnemonicParsing="false" text="Discipline 5" />
+                                                            </children>
+                                                        </AnchorPane>
+                                                    </content>
+                                                </TitledPane>
+                                            </panes>
+                                        </Accordion>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+                <Button fx:id="btn_AddRecord" layoutY="324.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="ADD RECORD" />
+                <Button fx:id="btn_CnShow" layoutY="349.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="COMPETITION" />
             </children>
         </AnchorPane>
     </left>
@@ -103,6 +103,6 @@
         <ScrollBar orientation="VERTICAL" BorderPane.alignment="CENTER" />
     </right>
     <center>
-        <ListView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+        <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
     </center>
 </BorderPane>
