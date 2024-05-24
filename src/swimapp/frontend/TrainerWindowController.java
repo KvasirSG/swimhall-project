@@ -25,8 +25,7 @@ public class TrainerWindowController {
 
     @FXML
     private Button btn_trnBack;
-    @FXML
-    private Button btn_AddRecord;
+
     @FXML
     private Button btn_CnShow;
 
@@ -111,13 +110,11 @@ public class TrainerWindowController {
     @FXML
     private ListView<String> listView;
 
-    private DatabaseManager dbManager;
 
     private List<Swimmer> currentSwimmers;
 
     @FXML
     public void initialize() {
-        dbManager = new DatabaseManager();
 
         btn_trnBack.setOnAction(event -> goBack());
         btn_CnShow.setOnAction(event -> showCompetitionWindow());

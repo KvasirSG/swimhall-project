@@ -94,7 +94,6 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Button fx:id="btn_AddRecord" layoutY="324.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="ADD RECORD" />
                 <Button fx:id="btn_CnShow" layoutY="349.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="COMPETITION" />
             </children>
         </AnchorPane>
