@@ -32,4 +32,11 @@ public class Discipline
     public void registerDiscipline(DatabaseManager dBManager){
         dBManager.addDiscipline(this.getName());
     }
+
+    @Override
+    public String toString(){
+        return getName();
+    }
 }
+
+

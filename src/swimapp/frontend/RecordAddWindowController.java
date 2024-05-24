@@ -3,15 +3,16 @@ package swimapp.frontend;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import swimapp.backend.DatabaseManager;
-import swimapp.backend.Discipline;
+import swimapp.backend.*;
 import swimapp.backend.Record;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class RecordAddWindowController {
 
@@ -31,60 +32,72 @@ public class RecordAddWindowController {
     private TextField tf_NrNrt;
 
     @FXML
-    private TextField tf_Nr_Disc;
+    private ComboBox<Discipline> cb_NrDisc;
 
     private DatabaseManager dbManager;
+
+    private Swimmer swimmer;
 
     @FXML
     public void initialize() {
         dbManager = new DatabaseManager();
+        List<Discipline> disciplines = dbManager.getDisciplines();
+        dbManager.closeConnection();
+        cb_NrDisc.getItems().addAll(disciplines);
 
         btn_NrBack.setOnAction(event -> goBack());
-        //btn_NrAdd.setOnAction(event -> addRecord());
+        btn_NrAdd.setOnAction(event -> addRecord());
     }
 
-   /** private void addRecord() {
+    public void setSwimmer(Swimmer swimmer) {
+        this.swimmer = swimmer;
+        tf_NrSID.setText(String.valueOf(swimmer.getSwimmerID()));
+        tf_NrSID.setDisable(true);
+    }
+
+    private void addRecord(){
         try {
-            int swimmerID = Integer.parseInt(tf_NrSID.getText());
-            String disciplineName = tf_Nr_Disc.getText();
+            int swimmerID = swimmer.getSwimmerID();
+            Discipline selectedDiscipline = cb_NrDisc.getSelectionModel().getSelectedItem();
+            if (selectedDiscipline == null){
+                showAlert("Error", "Please select a discipline.");
+                return;
+            }
             double newRecordTime = Double.parseDouble(tf_NrNrt.getText());
             String dateOfRecordStr = tf_NrDoR.getText();
             LocalDate dateOfRecord = LocalDate.parse(dateOfRecordStr, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 
-            Discipline discipline = dbManager.getDisciplineByID(disciplineID);
-            if (discipline == null) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Discipline not found: " + disciplineName);
-                alert.showAndWait();
-                return;
+            // Check if the swimmer already has the selected discipline
+            boolean hasDiscipline = false;
+            for (Discipline discipline : GuiInterface.getDisciplinesForSwimmer(swimmerID)) {
+                if (selectedDiscipline.getDisciplineID() == discipline.getDisciplineID()) {
+                    hasDiscipline = true;
+                    break;
+                }
+            }
+            // If the swimmer doesn't have the discipline, add it
+            if (!hasDiscipline) {
+                GuiInterface.addSwimmerDiscipline(swimmer, selectedDiscipline);
             }
 
-            Record record = new Record(swimmerID, discipline.getDisciplineID(), newRecordTime, dateOfRecord);
-            dbManager.addPerformanceRecord(record);
+            // Add the performance record
+            Record record = new Record(swimmerID, selectedDiscipline.getDisciplineID(), newRecordTime, dateOfRecord);
+            GuiInterface.addPerformanceRecord(record);
 
             // Clear the fields after adding the record
             tf_NrSID.clear();
             tf_NrDoR.clear();
             tf_NrNrt.clear();
-            tf_Nr_Disc.clear();
+            cb_NrDisc.getSelectionModel().clearSelection();
 
             // Provide confirmation to the user
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Record Added");
-            alert.setHeaderText(null);
-            alert.setContentText("Record for Swimmer ID " + swimmerID + " in discipline " + disciplineName + " has been successfully added.");
-            alert.showAndWait();
+            showAlert("Record Added", "Record for Swimmer ID " + swimmerID + " in discipline " + selectedDiscipline.getName() + " has been successfully added.");
 
-        } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Error adding record: " + e.getMessage());
-            alert.showAndWait();
+
+        }catch (Exception e) {
+            showAlert("Error", "Error adding record: " + e.getMessage());
         }
-    }**/
+    }
 
     private void goBack() {
         try {
@@ -92,5 +105,13 @@ public class RecordAddWindowController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

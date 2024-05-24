@@ -31,6 +31,25 @@ public class GuiInterface {
         return swimmers;
     }
 
+    public static List<Discipline> getDisciplinesForSwimmer(int swimmerID) {
+        DatabaseManager db = new DatabaseManager();
+        List<Discipline> disciplines = db.getDisciplinesForSwimmer(swimmerID);
+        db.closeConnection();
+        return disciplines;
+    }
+
+    public static void addSwimmerDiscipline(Swimmer swimmer, Discipline discipline) {
+        DatabaseManager db = new DatabaseManager();
+        swimmer.addDiscipline(db,discipline);
+        db.closeConnection();
+    }
+
+    public static void addPerformanceRecord(Record record) {
+        DatabaseManager db = new DatabaseManager();
+        db.addPerformanceRecord(record);
+        db.closeConnection();
+    }
+
     public Discipline getDisciplineByID(int disciplineID){
         DatabaseManager db = new DatabaseManager();
         Discipline discipline = db.getDiscipline(disciplineID);

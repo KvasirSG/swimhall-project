@@ -1,10 +1,15 @@
 package swimapp.frontend;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import swimapp.backend.DatabaseManager;
 import swimapp.backend.Gender;
 import swimapp.backend.GuiInterface;
@@ -107,13 +112,13 @@ public class TrainerWindowController {
 
     private DatabaseManager dbManager;
 
+    private List<Swimmer> currentSwimmers;
+
     @FXML
     public void initialize() {
         dbManager = new DatabaseManager();
 
         btn_trnBack.setOnAction(event -> goBack());
-        btn_AddRecord.setOnAction(event -> showAddRecordWindow());
-        btn_CnShow.setOnAction(event -> showCompetitionWindow());
 
         acdn_T1.setOnMouseClicked(event -> {
             try {
@@ -159,6 +164,17 @@ public class TrainerWindowController {
         btn_T2WD3.setOnAction(event -> showDisciplineMembers(3));
         btn_T2WD4.setOnAction(event -> showDisciplineMembers(4));
         btn_T2WD5.setOnAction(event -> showDisciplineMembers(5));
+
+        listView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // Double-click
+                String selectedItem = listView.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    int index = listView.getSelectionModel().getSelectedIndex();
+                    Swimmer selectedSwimmer = currentSwimmers.get(index);
+                    openAddRecordWindow(selectedSwimmer);
+                }
+            }
+        });
     }
 
     private void goBack() {
@@ -172,8 +188,8 @@ public class TrainerWindowController {
     private void showTeamMembers(int teamID) throws SQLException {
         try {
             listView.getItems().clear();
-            List<Swimmer> swimmers = dbManager.getSwimmersByTeam(teamID);
-            for (Swimmer swimmer : swimmers) {
+            currentSwimmers = GuiInterface.getSwimmersByTeam(teamID);
+            for (Swimmer swimmer : currentSwimmers) {
                 listView.getItems().add(swimmer.getName());
             }
         } catch (NullPointerException e){
@@ -184,8 +200,8 @@ public class TrainerWindowController {
     private void showTeamGenderMembers(int teamID, Gender gender) {
         try {
             listView.getItems().clear();
-            List<Swimmer> swimmers = dbManager.getSwimmersByTeamAndGender(teamID, gender);
-            for (Swimmer swimmer : swimmers) {
+            currentSwimmers = GuiInterface.getSwimmersByTeamAndGender(teamID, gender);
+            for (Swimmer swimmer : currentSwimmers) {
                 listView.getItems().add(swimmer.getName());
             }
         } catch ( NullPointerException e){
@@ -196,18 +212,28 @@ public class TrainerWindowController {
     private void showDisciplineMembers(int disciplineID) {
         try {
             listView.getItems().clear();
-            List<Swimmer> swimmers = dbManager.getSwimmersByDiscipline(disciplineID);
-            for (Swimmer swimmer : swimmers) {
+            currentSwimmers = GuiInterface.getSwimmersByDiscipline(disciplineID);
+            for (Swimmer swimmer : currentSwimmers) {
                 listView.getItems().add(swimmer.getName() + " - Time: " + GuiInterface.getBestRecordForSwimmerByDiscipline(swimmer.getSwimmerID(), disciplineID).getTime());
             }
         } catch (NullPointerException e){
             e.printStackTrace();
         }
     }
-
-    private void showAddRecordWindow() {
+    private void openAddRecordWindow(Swimmer swimmer) {
         try {
-            Main.showAddRecordWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("RecordAddWindow.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller and set the swimmer and discipline
+            RecordAddWindowController controller = loader.getController();
+            controller.setSwimmer(swimmer);
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Add Record");
+            stage.setScene(new Scene(root));
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
