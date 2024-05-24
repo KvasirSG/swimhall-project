@@ -50,6 +50,13 @@ public class GuiInterface {
         db.closeConnection();
     }
 
+    public static List<Discipline> getAllDisciplines() {
+        DatabaseManager db = new DatabaseManager();
+        List<Discipline> disciplines = db.getDisciplines();
+        db.closeConnection();
+        return disciplines;
+    }
+
     public Discipline getDisciplineByID(int disciplineID){
         DatabaseManager db = new DatabaseManager();
         Discipline discipline = db.getDiscipline(disciplineID);

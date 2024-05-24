@@ -8,12 +8,10 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import swimapp.backend.DatabaseManager;
-import swimapp.backend.Gender;
-import swimapp.backend.GuiInterface;
-import swimapp.backend.Swimmer;
+import swimapp.backend.*;
 import swimapp.frontend.Main;
 
 import java.io.IOException;
@@ -23,6 +21,11 @@ import java.util.List;
 
 public class TrainerWindowController {
 
+    public AnchorPane ap_T2M;
+    public AnchorPane ap_T2W;
+    public AnchorPane ap_T1W;
+    public AnchorPane ap_T1M;
+    public TitledPane acdn_T1W;
     @FXML
     private Button btn_trnBack;
 
@@ -37,75 +40,6 @@ public class TrainerWindowController {
 
     @FXML
     private TitledPane acdn_T1M;
-
-    @FXML
-    private TitledPane acdn_T1W;
-
-    @FXML
-    private TitledPane acdn_T2M;
-
-    @FXML
-    private TitledPane acdn_T2W;
-
-    @FXML
-    private Button btn_T1MD1;
-
-    @FXML
-    private Button btn_T1MD2;
-
-    @FXML
-    private Button btn_T1MD3;
-
-    @FXML
-    private Button btn_T1MD4;
-
-    @FXML
-    private Button btn_T1MD5;
-
-    @FXML
-    private Button btn_T1WD1;
-
-    @FXML
-    private Button btn_T1WD2;
-
-    @FXML
-    private Button btn_T1WD3;
-
-    @FXML
-    private Button btn_T1WD4;
-
-    @FXML
-    private Button btn_T1WD5;
-
-    @FXML
-    private Button btn_T2MD1;
-
-    @FXML
-    private Button btn_T2MD2;
-
-    @FXML
-    private Button btn_T2MD3;
-
-    @FXML
-    private Button btn_T2MD4;
-
-    @FXML
-    private Button btn_T2MD5;
-
-    @FXML
-    private Button btn_T2WD1;
-
-    @FXML
-    private Button btn_T2WD2;
-
-    @FXML
-    private Button btn_T2WD3;
-
-    @FXML
-    private Button btn_T2WD4;
-
-    @FXML
-    private Button btn_T2WD5;
 
     @FXML
     private ListView<String> listView;
@@ -133,36 +67,22 @@ public class TrainerWindowController {
                 throw new RuntimeException(e);
             }
         });
+        List<Discipline> disciplines = GuiInterface.getAllDisciplines();
 
-        acdn_T1M.setOnMouseClicked(event -> showTeamGenderMembers(1, Gender.MALE));
-        acdn_T1W.setOnMouseClicked(event -> showTeamGenderMembers(1, Gender.FEMALE));
-
-        acdn_T2M.setOnMouseClicked(event -> showTeamGenderMembers(2, Gender.MALE));
-        acdn_T2W.setOnMouseClicked(event -> showTeamGenderMembers(2, Gender.FEMALE));
-
-        btn_T1MD1.setOnAction(event -> showDisciplineMembers(1,1,Gender.MALE));
-        btn_T1MD2.setOnAction(event -> showDisciplineMembers(2,1,Gender.MALE));
-        btn_T1MD3.setOnAction(event -> showDisciplineMembers(3,1,Gender.MALE));
-        btn_T1MD4.setOnAction(event -> showDisciplineMembers(4,1,Gender.MALE));
-        btn_T1MD5.setOnAction(event -> showDisciplineMembers(5,1,Gender.MALE));
-
-        btn_T1WD1.setOnAction(event -> showDisciplineMembers(1,1,Gender.FEMALE));
-        btn_T1WD2.setOnAction(event -> showDisciplineMembers(2,1,Gender.FEMALE));
-        btn_T1WD3.setOnAction(event -> showDisciplineMembers(3,1,Gender.FEMALE));
-        btn_T1WD4.setOnAction(event -> showDisciplineMembers(4,1,Gender.FEMALE));
-        btn_T1WD5.setOnAction(event -> showDisciplineMembers(5,1,Gender.FEMALE));
-
-        btn_T2MD1.setOnAction(event -> showDisciplineMembers(1,2,Gender.MALE));
-        btn_T2MD2.setOnAction(event -> showDisciplineMembers(2,2,Gender.MALE));
-        btn_T2MD3.setOnAction(event -> showDisciplineMembers(3,2,Gender.MALE));
-        btn_T2MD4.setOnAction(event -> showDisciplineMembers(4,2,Gender.MALE));
-        btn_T2MD5.setOnAction(event -> showDisciplineMembers(5,2,Gender.MALE));
-
-        btn_T2WD1.setOnAction(event -> showDisciplineMembers(1,2,Gender.FEMALE));
-        btn_T2WD2.setOnAction(event -> showDisciplineMembers(2,2,Gender.FEMALE));
-        btn_T2WD3.setOnAction(event -> showDisciplineMembers(3,2,Gender.FEMALE));
-        btn_T2WD4.setOnAction(event -> showDisciplineMembers(4,2,Gender.FEMALE));
-        btn_T2WD5.setOnAction(event -> showDisciplineMembers(5,2,Gender.FEMALE));
+        for (Discipline discipline:disciplines){
+            Button buttonT1M = new Button(discipline.getName());
+            Button buttonT1W = new Button(discipline.getName());
+            Button buttonT2M = new Button(discipline.getName());
+            Button buttonT2W = new Button(discipline.getName());
+            buttonT1M.setOnAction(e-> showDisciplineMembers(discipline.getDisciplineID(),1,Gender.MALE));
+            buttonT1W.setOnAction(e-> showDisciplineMembers(discipline.getDisciplineID(),1,Gender.FEMALE));
+            buttonT2M.setOnAction(e-> showDisciplineMembers(discipline.getDisciplineID(),2,Gender.MALE));
+            buttonT2W.setOnAction(e-> showDisciplineMembers(discipline.getDisciplineID(),2,Gender.FEMALE));
+            ap_T1M.getChildren().add(buttonT1M);
+            ap_T1W.getChildren().add(buttonT1W);
+            ap_T2M.getChildren().add(buttonT2M);
+            ap_T2W.getChildren().add(buttonT2W);
+        }
 
         listView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) { // Double-click

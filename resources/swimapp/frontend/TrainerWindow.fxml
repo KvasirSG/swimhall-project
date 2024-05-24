@@ -23,26 +23,16 @@
                                             <panes>
                                                 <TitledPane fx:id="acdn_T1M" animated="false" text="MEN">
                                                     <content>
-                                                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                        <AnchorPane fx:id="ap_T1M" prefHeight="200.0" prefWidth="200.0">
                                                             <children>
-                                                                <Button fx:id="btn_T1MD1" mnemonicParsing="false" text="Discipline 1" />
-                                                                <Button fx:id="btn_T1MD2" layoutY="25.0" mnemonicParsing="false" text="Discipline 2" />
-                                                                <Button fx:id="btn_T1MD3" layoutY="50.0" mnemonicParsing="false" text="Discipline 3" />
-                                                                <Button fx:id="btn_T1MD4" layoutY="75.0" mnemonicParsing="false" text="Discipline 4" />
-                                                                <Button fx:id="btn_T1MD5" layoutY="100.0" mnemonicParsing="false" text="Discipline 5" />
                                                             </children>
                                                         </AnchorPane>
                                                     </content>
                                                 </TitledPane>
                                                 <TitledPane fx:id="acdn_T1W" animated="false" text="WOMEN">
                                                     <content>
-                                                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                        <AnchorPane fx:id="ap_T1W" prefHeight="200.0" prefWidth="200.0">
                                                             <children>
-                                                                <Button fx:id="btn_T1WD1" mnemonicParsing="false" text="Discipline 1" />
-                                                                <Button fx:id="btn_T1WD2" layoutY="25.0" mnemonicParsing="false" text="Discipline 2" />
-                                                                <Button fx:id="btn_T1WD3" layoutY="50.0" mnemonicParsing="false" text="Discipline 3" />
-                                                                <Button fx:id="btn_T1WD4" layoutY="75.0" mnemonicParsing="false" text="Discipline 4" />
-                                                                <Button fx:id="btn_T1WD5" layoutY="100.0" mnemonicParsing="false" text="Discipline 5" />
                                                             </children>
                                                         </AnchorPane>
                                                     </content>
@@ -62,26 +52,16 @@
                                             <panes>
                                                 <TitledPane fx:id="acdn_T2M" animated="false" text="MEN">
                                                     <content>
-                                                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                        <AnchorPane fx:id="ap_T2M" prefHeight="200.0" prefWidth="200.0">
                                                             <children>
-                                                                <Button fx:id="btn_T2MD1" mnemonicParsing="false" text="Discipline 1" />
-                                                                <Button fx:id="btn_T2MD2" layoutY="25.0" mnemonicParsing="false" text="Discipline 2" />
-                                                                <Button fx:id="btn_T2MD3" layoutY="50.0" mnemonicParsing="false" text="Discipline 3" />
-                                                                <Button fx:id="btn_T2MD4" layoutY="75.0" mnemonicParsing="false" text="Discipline 4" />
-                                                                <Button fx:id="btn_T2MD5" layoutY="100.0" mnemonicParsing="false" text="Discipline 5" />
                                                             </children>
                                                         </AnchorPane>
                                                     </content>
                                                 </TitledPane>
                                                 <TitledPane fx:id="acdn_T2W" animated="false" text="WOMEN">
                                                     <content>
-                                                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                        <AnchorPane fx:id="ap_T2W" prefHeight="200.0" prefWidth="200.0">
                                                             <children>
-                                                                <Button fx:id="btn_T2WD1" mnemonicParsing="false" text="Discipline 1" />
-                                                                <Button fx:id="btn_T2WD2" layoutY="25.0" mnemonicParsing="false" text="Discipline 2" />
-                                                                <Button fx:id="btn_T2WD3" layoutY="50.0" mnemonicParsing="false" text="Discipline 3" />
-                                                                <Button fx:id="btn_T2WD4" layoutY="75.0" mnemonicParsing="false" text="Discipline 4" />
-                                                                <Button fx:id="btn_T2WD5" layoutY="100.0" mnemonicParsing="false" text="Discipline 5" />
                                                             </children>
                                                         </AnchorPane>
                                                     </content>
