@@ -18,6 +18,7 @@ import swimapp.frontend.Main;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TrainerWindowController {
@@ -142,29 +143,29 @@ public class TrainerWindowController {
         acdn_T2M.setOnMouseClicked(event -> showTeamGenderMembers(2, Gender.MALE));
         acdn_T2W.setOnMouseClicked(event -> showTeamGenderMembers(2, Gender.FEMALE));
 
-        btn_T1MD1.setOnAction(event -> showDisciplineMembers(1));
-        btn_T1MD2.setOnAction(event -> showDisciplineMembers(2));
-        btn_T1MD3.setOnAction(event -> showDisciplineMembers(3));
-        btn_T1MD4.setOnAction(event -> showDisciplineMembers(4));
-        btn_T1MD5.setOnAction(event -> showDisciplineMembers(5));
+        btn_T1MD1.setOnAction(event -> showDisciplineMembers(1,1,Gender.MALE));
+        btn_T1MD2.setOnAction(event -> showDisciplineMembers(2,1,Gender.MALE));
+        btn_T1MD3.setOnAction(event -> showDisciplineMembers(3,1,Gender.MALE));
+        btn_T1MD4.setOnAction(event -> showDisciplineMembers(4,1,Gender.MALE));
+        btn_T1MD5.setOnAction(event -> showDisciplineMembers(5,1,Gender.MALE));
 
-        btn_T1WD1.setOnAction(event -> showDisciplineMembers(1));
-        btn_T1WD2.setOnAction(event -> showDisciplineMembers(2));
-        btn_T1WD3.setOnAction(event -> showDisciplineMembers(3));
-        btn_T1WD4.setOnAction(event -> showDisciplineMembers(4));
-        btn_T1WD5.setOnAction(event -> showDisciplineMembers(5));
+        btn_T1WD1.setOnAction(event -> showDisciplineMembers(1,1,Gender.FEMALE));
+        btn_T1WD2.setOnAction(event -> showDisciplineMembers(2,1,Gender.FEMALE));
+        btn_T1WD3.setOnAction(event -> showDisciplineMembers(3,1,Gender.FEMALE));
+        btn_T1WD4.setOnAction(event -> showDisciplineMembers(4,1,Gender.FEMALE));
+        btn_T1WD5.setOnAction(event -> showDisciplineMembers(5,1,Gender.FEMALE));
 
-        btn_T2MD1.setOnAction(event -> showDisciplineMembers(1));
-        btn_T2MD2.setOnAction(event -> showDisciplineMembers(2));
-        btn_T2MD3.setOnAction(event -> showDisciplineMembers(3));
-        btn_T2MD4.setOnAction(event -> showDisciplineMembers(4));
-        btn_T2MD5.setOnAction(event -> showDisciplineMembers(5));
+        btn_T2MD1.setOnAction(event -> showDisciplineMembers(1,2,Gender.MALE));
+        btn_T2MD2.setOnAction(event -> showDisciplineMembers(2,2,Gender.MALE));
+        btn_T2MD3.setOnAction(event -> showDisciplineMembers(3,2,Gender.MALE));
+        btn_T2MD4.setOnAction(event -> showDisciplineMembers(4,2,Gender.MALE));
+        btn_T2MD5.setOnAction(event -> showDisciplineMembers(5,2,Gender.MALE));
 
-        btn_T2WD1.setOnAction(event -> showDisciplineMembers(1));
-        btn_T2WD2.setOnAction(event -> showDisciplineMembers(2));
-        btn_T2WD3.setOnAction(event -> showDisciplineMembers(3));
-        btn_T2WD4.setOnAction(event -> showDisciplineMembers(4));
-        btn_T2WD5.setOnAction(event -> showDisciplineMembers(5));
+        btn_T2WD1.setOnAction(event -> showDisciplineMembers(1,2,Gender.FEMALE));
+        btn_T2WD2.setOnAction(event -> showDisciplineMembers(2,2,Gender.FEMALE));
+        btn_T2WD3.setOnAction(event -> showDisciplineMembers(3,2,Gender.FEMALE));
+        btn_T2WD4.setOnAction(event -> showDisciplineMembers(4,2,Gender.FEMALE));
+        btn_T2WD5.setOnAction(event -> showDisciplineMembers(5,2,Gender.FEMALE));
 
         listView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) { // Double-click
@@ -210,10 +211,20 @@ public class TrainerWindowController {
         }
     }
 
-    private void showDisciplineMembers(int disciplineID) {
+    private void showDisciplineMembers(int disciplineID, int teamID, Gender gender) {
         try {
             listView.getItems().clear();
-            currentSwimmers = GuiInterface.getSwimmersByDiscipline(disciplineID);
+            List<Swimmer> disciplineSwimmers = GuiInterface.getSwimmersByDiscipline(disciplineID);
+            List<Swimmer> teamNGenderSwimmers= GuiInterface.getSwimmersByTeamAndGender(teamID, gender);
+            currentSwimmers = new ArrayList<>();
+            for (Swimmer swimmer:teamNGenderSwimmers){
+                for (Swimmer dSwimmer:disciplineSwimmers){
+                    if (swimmer.getSwimmerID() == dSwimmer.getSwimmerID()){
+                        currentSwimmers.add(swimmer);
+                    }
+                }
+            }
+
             for (Swimmer swimmer : currentSwimmers) {
                 listView.getItems().add(swimmer.getName() + " - Time: " + GuiInterface.getBestRecordForSwimmerByDiscipline(swimmer.getSwimmerID(), disciplineID).getTime());
             }
