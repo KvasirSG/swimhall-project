@@ -119,6 +119,7 @@ public class TrainerWindowController {
         dbManager = new DatabaseManager();
 
         btn_trnBack.setOnAction(event -> goBack());
+        btn_CnShow.setOnAction(event -> showCompetitionWindow());
 
         acdn_T1.setOnMouseClicked(event -> {
             try {
@@ -238,6 +239,7 @@ public class TrainerWindowController {
             e.printStackTrace();
         }
     }
+
 
     private void showCompetitionWindow() {
         try {

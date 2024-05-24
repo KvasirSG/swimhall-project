@@ -7,6 +7,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import swimapp.backend.*;
+import javafx.stage.Stage;
 import swimapp.backend.Record;
 
 import java.io.IOException;
@@ -100,11 +101,8 @@ public class RecordAddWindowController {
     }
 
     private void goBack() {
-        try {
-            Main.showTrainerWindow();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Stage stage = (Stage) btn_NrBack.getScene().getWindow();
+        stage.close();
     }
 
     private void showAlert(String title, String content) {

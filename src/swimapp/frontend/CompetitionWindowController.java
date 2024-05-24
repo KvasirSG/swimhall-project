@@ -49,7 +49,7 @@ public class CompetitionWindowController {
 
     private void goBack() {
         try {
-            Main.showMainWindow();
+            Main.showTrainerWindow();
         } catch (IOException e) {
             e.printStackTrace();
         }
