@@ -39,9 +39,6 @@ public class TrainerWindowController {
     private TitledPane acdn_T2;
 
     @FXML
-    private TitledPane acdn_T1M;
-
-    @FXML
     private ListView<String> listView;
 
 
