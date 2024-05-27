@@ -57,6 +57,24 @@ public class GuiInterface {
         return disciplines;
     }
 
+    public static DatabaseManager getDbManager() {
+        DatabaseManager db = new DatabaseManager();
+        return db;
+    }
+
+    public static Swimmer getSwimmerByMemberID(int memberID) {
+        DatabaseManager db = new DatabaseManager();
+        List<Swimmer> swimmers = db.getSwimmers();
+        db.closeConnection();
+
+        for (Swimmer swimmer:swimmers){
+            if (swimmer.getMemberID()==memberID){
+                return swimmer;
+            }
+        }
+        return null;
+    }
+
     public Discipline getDisciplineByID(int disciplineID){
         DatabaseManager db = new DatabaseManager();
         Discipline discipline = db.getDiscipline(disciplineID);

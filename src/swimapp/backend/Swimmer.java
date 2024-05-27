@@ -8,18 +8,42 @@ public class Swimmer extends Member {
     private int teamID;
     private List<Discipline> disciplines;
 
-    public Swimmer (int memberID, String name, Gender gender,  LocalDate birthday,MembershipType membershipType, DatabaseManager dBmanager)
+    // Constructor to add swimmer from a member
+    public Swimmer (int memberID, String name, Gender gender,  LocalDate birthday,MembershipType membershipType)
     {
         super(memberID, name,gender, birthday, membershipType);
-        if(this.SwimmerID !=0){
-            disciplines = dBmanager.getDisciplinesForSwimmer(this.SwimmerID);
-        }
+        disciplines = new ArrayList<>();
+        calculateTeam();
     }
+
+    //Constructor to add new swimmer and member
+    public Swimmer(String name, Gender gender,  LocalDate birthday, Boolean isPassive){
+        super(name,gender,birthday, isPassive);
+        disciplines = new ArrayList<>();
+        calculateTeam();
+    }
+
+    //Constructor to import swimmer from the DB
     public Swimmer (int swimmerID, int memberID, String name, Gender gender, LocalDate birthday,MembershipType membershipType)
     {
         super(memberID, name, gender , birthday, membershipType);
+        DatabaseManager dbManager = new DatabaseManager();
         this.SwimmerID = swimmerID;
-        disciplines = new ArrayList<>();
+        if(this.SwimmerID !=0){
+            disciplines = dbManager.getDisciplinesForSwimmer(this.SwimmerID);
+            dbManager.closeConnection();
+        }
+        dbManager.closeConnection();
+        calculateTeam();
+
+    }
+
+    private void calculateTeam(){
+        if (this.getAge()>=18){
+            setTeamID(Team.SENIOR);
+        }else {
+            setTeamID(Team.JUNIOR);
+        }
     }
 
     public void setSwimmerID(int swimmerID) {
@@ -82,12 +106,13 @@ public class Swimmer extends Member {
         return bestRecords;
     }
 
-    public void registerSwimmer(DatabaseManager dBManager, Boolean newMember){
+    public void registerSwimmer(DatabaseManager dbManager, Boolean newMember){
         if (newMember){
-            dBManager.addNewSwimmer(this,this.teamID);
+            //dbManager.addNewSwimmer(this,this.teamID);
         }else {
-            this.SwimmerID = dBManager.addSwimmerFromExistingMember(this.getMemberID(),this.teamID);
+            this.SwimmerID = dbManager.addSwimmerFromExistingMember(this.getMemberID(),this.teamID);
         }
+        dbManager.closeConnection();
 
     }
 
@@ -98,6 +123,7 @@ public class Swimmer extends Member {
         } else {
             dbManager.removeSwimmer(this.getSwimmerID());
         }
+        dbManager.closeConnection();
     }
 
     public void setTeamID(int teamID) {

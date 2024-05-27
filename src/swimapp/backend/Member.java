@@ -141,6 +141,7 @@ public class Member {
 
     public void update(DatabaseManager dbManager){
         dbManager.updateMember(this);
+        dbManager.closeConnection();
     }
 
     public Gender getGender() {

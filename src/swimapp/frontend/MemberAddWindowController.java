@@ -59,7 +59,7 @@ public class MemberAddWindowController {
             DatabaseManager dbManager = new DatabaseManager();
             Member member = new Member(name, selectedGenderToEnum, birthday, isPassive);
 
-            dbManager.addMember(member);
+            member.registerMember(dbManager);
 
             // Clear the fields after adding the member
             tf_NmName.clear();
@@ -82,7 +82,6 @@ public class MemberAddWindowController {
             alert.showAndWait();
         }
     }
-
     private void goBack() {
         try {
             Main.showAdminWindow();
