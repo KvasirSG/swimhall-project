@@ -97,6 +97,7 @@ public class Payments {
     }
 
     public void fetchInvoicesForMembers(DatabaseManager dbManager){
+        invoices.clear();
         for (Member member:members){
             List<Invoice> tempvoices = dbManager.getInvoicesForMember(member.getMemberID());
             invoices.addAll(tempvoices);
