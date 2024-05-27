@@ -5,8 +5,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+
+
 public class Team
 {
+    public static int JUNIOR = 1;
+    public static int SENIOR = 2;
     private int teamID;
     private String name;
     List<Swimmer> team;
