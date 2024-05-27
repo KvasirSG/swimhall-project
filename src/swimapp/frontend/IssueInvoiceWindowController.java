@@ -1,2 +1,4 @@
-package swimapp.frontend;public class IssueInvoiceWindowController {
+package swimapp.frontend;
+
+public class IssueInvoiceWindowController {
 }
