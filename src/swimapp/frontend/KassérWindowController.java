@@ -3,8 +3,11 @@ package swimapp.frontend;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import swimapp.backend.*;
-import swimapp.frontend.Main;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,13 +21,10 @@ public class KassérWindowController {
     private Button btn_trsArrShow;
 
     @FXML
-    private Button btn_trsPay;
-
-    @FXML
     private Button btn_trsBack;
 
     @FXML
-    private ListView<String> listView;
+    private ListView<String> lv_memView;
 
     private Payments payments;
     private DatabaseManager dbManager;
@@ -32,42 +32,75 @@ public class KassérWindowController {
     @FXML
     public void initialize() {
         payments = new Payments();
-        dbManager = new DatabaseManager(); // Assuming you have a default constructor
+        dbManager = new DatabaseManager();
 
         btn_trsMemShow.setOnAction(event -> showMembers());
         btn_trsArrShow.setOnAction(event -> showArrears());
-        btn_trsPay.setOnAction(event -> makePayment());
         btn_trsBack.setOnAction(event -> goBack());
+
+        lv_memView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                openInvoiceWindow();
+            }
+        });
     }
 
     private void showMembers() {
-        listView.getItems().clear();
-        List<Member> members = GuiInterface.getAllMembers();
+        lv_memView.getItems().clear();
+        List<Member> members = dbManager.getAllMembers();
         for (Member member : members) {
-            listView.getItems().add(member.toString());
+            lv_memView.getItems().add(member.toString());
         }
     }
 
     private void showArrears() {
-        listView.getItems().clear();
-        List<Member> membersInArrears = GuiInterface.getMembersInArrears();
+        lv_memView.getItems().clear();
+        List<Member> membersInArrears = payments.getMembersInArrears(dbManager);
         for (Member member : membersInArrears) {
-            listView.getItems().add(member.toString());
+            lv_memView.getItems().add(member.toString());
         }
     }
 
-    private void makePayment() {
-        List<Invoice> arrears = payments.getArrears();
-        if (!arrears.isEmpty()) {
-            Invoice invoiceToPay = arrears.get(0);
-            payments.markInvoiceAsPaid(invoiceToPay.getInvoiceID());
-            listView.getItems().clear();
-            listView.getItems().add("Paid Invoice ID: " + invoiceToPay.getInvoiceID());
-        } else {
-            listView.getItems().clear();
-            listView.getItems().add("No arrears to pay.");
+    private void openInvoiceWindow() {
+        String selectedItem = lv_memView.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            int memberId = extractMemberIdFromString(selectedItem);
+            List<Invoice> invoices = dbManager.getInvoicesForMember(memberId);
+            if (!invoices.isEmpty()) {
+                Invoice invoice = invoices.get(0); // Assuming you want the first invoice for now
+                try {
+                    FXMLLoader loader = new FXMLLoader(Main.class.getResource("/swimapp/frontend/InvoiceWindow.fxml"));
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(loader.load()));
+                    InvoiceWindowController controller = loader.getController();
+                    controller.setInvoice(invoice);
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
+
+    private int extractMemberIdFromString(String memberString) {
+        // Assuming the string format is: "Member ID: 1 | Name: John Doe | Gender: MALE | Birthday: 1995-05-05 | Age: 29 | Membership: Adult"
+        String[] parts = memberString.split("\\|");
+        for (String part : parts) {
+            part = part.trim();
+            if (part.startsWith("Member ID:")) {
+                String[] idPart = part.split(":");
+                if (idPart.length == 2) {
+                    try {
+                        return Integer.parseInt(idPart[1].trim());
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        throw new IllegalArgumentException("Invalid member string format: " + memberString);
+    }
+
 
     private void goBack() {
         try {
@@ -77,4 +110,3 @@ public class KassérWindowController {
         }
     }
 }
-

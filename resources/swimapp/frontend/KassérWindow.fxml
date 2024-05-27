@@ -21,6 +21,6 @@
         <ScrollBar orientation="VERTICAL" BorderPane.alignment="CENTER" />
     </right>
     <center>
-        <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+        <ListView fx:id="lv_memView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
     </center>
 </BorderPane>
