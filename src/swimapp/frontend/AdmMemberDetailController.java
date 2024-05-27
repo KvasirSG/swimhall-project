@@ -4,14 +4,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import swimapp.backend.DatabaseManager;
-import swimapp.backend.Member;
-import swimapp.backend.MembershipType;
+import swimapp.backend.*;
 
 import java.time.format.DateTimeFormatter;
 
 public class AdmMemberDetailController {
 
+    public Button btn_addToSwimmer;
     @FXML
     private Button btn_amdBack;
     @FXML
@@ -25,7 +24,6 @@ public class AdmMemberDetailController {
     @FXML
     private Button btn_toggleMembershipStatus;
 
-    private DatabaseManager dbManager;
     private Member member;
 
     public void setMember(Member member) {
@@ -35,7 +33,9 @@ public class AdmMemberDetailController {
 
     @FXML
     public void initialize() {
-        dbManager = new DatabaseManager();
+
+        btn_toggleMembershipStatus.setOnAction(event -> toggleMembershipStatus());
+        btn_addToSwimmer.setOnAction(actionEvent -> toggleSwimmer());
 
         // Add event listener for the back button
         btn_amdBack.setOnAction(event -> closeWindow());
@@ -50,15 +50,32 @@ public class AdmMemberDetailController {
 
             boolean isCurrentlyPassive = member.getMembershipTypeID() == MembershipType.PASSIVE;
             btn_toggleMembershipStatus.setText(isCurrentlyPassive ? "Set Active" : "Set Passive");
+
+            btn_addToSwimmer.setText( isCurrentlySwimmer() ? "Remove from Swimmer":"Set as Swimmer");
         }
     }
 
     private void toggleMembershipStatus() {
         boolean isCurrentlyPassive = member.getMembershipTypeID() == MembershipType.PASSIVE;
         member.setMembershipTypeID(isCurrentlyPassive ? calculateActiveMembershipTypeID(member.getAge()) : MembershipType.PASSIVE);
-        dbManager.updateMember(member);
+        member.update(GuiInterface.getDbManager());
+
+        btn_toggleMembershipStatus.setText(isCurrentlyPassive ? "Set Active" : "Set Passive");
     }
 
+    private void toggleSwimmer(){
+        Swimmer swimmer =  GuiInterface.getSwimmerByMemberID(member.getMemberID());
+        if (swimmer != null){
+            swimmer.remove(GuiInterface.getDbManager(),false);
+        }else{
+            Swimmer swimmer1 = new Swimmer(member.getMemberID(),member.getName(),member.getGender(),member.getBirthday(),member.getMembershipType());
+            swimmer1.registerSwimmer(GuiInterface.getDbManager(),false);
+        }
+        btn_addToSwimmer.setText( isCurrentlySwimmer() ? "Remove from Swimmer":"Set as Swimmer");
+    }
+    private boolean isCurrentlySwimmer(){
+        return GuiInterface.getSwimmerByMemberID(member.getMemberID()) != null;
+    }
     private int calculateActiveMembershipTypeID(int age) {
         if (age >= 60) {
             return MembershipType.SENIOR;
