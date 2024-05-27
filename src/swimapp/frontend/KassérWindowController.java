@@ -1,9 +1,11 @@
 package swimapp.frontend;
 
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 import swimapp.backend.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,6 +16,7 @@ import java.util.List;
 
 public class KassérWindowController {
 
+    public Button btn_trsIssInv;
     @FXML
     private Button btn_trsMemShow;
 
@@ -37,6 +40,13 @@ public class KassérWindowController {
         btn_trsMemShow.setOnAction(event -> showMembers());
         btn_trsArrShow.setOnAction(event -> showArrears());
         btn_trsBack.setOnAction(event -> goBack());
+        btn_trsIssInv.setOnAction(actionEvent -> {
+            try {
+                openIssueInvoiceWindow();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         lv_memView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
@@ -108,5 +118,19 @@ public class KassérWindowController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void openIssueInvoiceWindow() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/swimapp/frontend/IssueInvoiceWindow.fxml"));
+        Parent root = loader.load();
+
+        // Get the controller and set the member
+        IssueInvoiceWindowController controller = loader.getController();
+
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Issue Invoice");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 }

@@ -71,5 +71,6 @@ public class Invoice {
 
     public void registerInvoice(DatabaseManager dbManager){
         dbManager.addInvoice(this);
+        dbManager.closeConnection();
     }
 }

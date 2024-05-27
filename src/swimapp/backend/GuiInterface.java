@@ -75,6 +75,13 @@ public class GuiInterface {
         return null;
     }
 
+    public static Member getMemberByID(int memberID) {
+        DatabaseManager db = new DatabaseManager();
+        Member member = db.getMember(memberID);
+        db.closeConnection();
+        return member;
+    }
+
     public Discipline getDisciplineByID(int disciplineID){
         DatabaseManager db = new DatabaseManager();
         Discipline discipline = db.getDiscipline(disciplineID);
