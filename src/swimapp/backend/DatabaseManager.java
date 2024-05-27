@@ -278,11 +278,12 @@ public class DatabaseManager {
     // swimapp.backend.Swimmer Management
 
     /**
+     * NOT IMPLEMENTED BY THE SQLITE DRIVER
      * Adds a new swimmer to the database and assigns them to a team.
      * @param swimmer the swimmer to add
      * @param teamID the ID of the team to which the swimmer will be assigned
      */
-    public void addNewSwimmer(Swimmer swimmer, int teamID){
+   /* public void addNewSwimmer(Swimmer swimmer, int teamID){
 
         String sql = "INSERT INTO Swimmers (memberID, teamID) VALUES (?, ?)";
 
@@ -310,7 +311,7 @@ public class DatabaseManager {
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }
-    }
+    }*/
 
     /**
      * Adds a swimmer to the database from an existing member and assigns them to a team.
@@ -381,8 +382,8 @@ public class DatabaseManager {
     public List<Swimmer> getSwimmers(){
         String sql = "SELECT Swimmers.swimmerID, Swimmers.teamID, Members.memberID, Members.name, Members.gender, Members.birthday, Members.membershipTypeID, MembershipTypes.description, MembershipTypes.fee " +
                 "FROM Swimmers " +
-                "JOIN Members ON Swimmers.memberID = Members.memberID" +
-                "LEFT JOIN MembershipTypes ON Members.membershipTypeID = MembershipTypes.membershipTypeID";
+                "JOIN Members ON Swimmers.memberID = Members.memberID " +
+                "LEFT JOIN MembershipTypes ON Members.membershipTypeID = MembershipTypes.TypeID";
         List<Swimmer> swimmers = new ArrayList<>();
         try(PreparedStatement pstmt = connection.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
