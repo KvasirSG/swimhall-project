@@ -20,7 +20,6 @@
             <Text layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Member name:" />
             <TextField fx:id="tf_NmBday" layoutY="140.0" />
             <Text layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Member birthday (yyyy/mm/dd)" />
-            <Text layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Member type (Use toggle button)" />
             <Text layoutX="126.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Adding new member: " />
             <Button fx:id="btn_NmCreate" layoutY="302.0" mnemonicParsing="false" text="Create Member" />
             <Text layoutX="3.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gender" />

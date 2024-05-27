@@ -38,7 +38,7 @@ public class MemberAddWindowController {
 
     @FXML
     public void initialize() {
-        genderComboBox.getItems().addAll(Gender.MALE.name(), Gender.FEMALE.name());
+        genderComboBox.getItems().addAll(Gender.MALE.toString(), Gender.FEMALE.toString());
         genderComboBox.setOnAction(event -> {
             String selectedGender = genderComboBox.getSelectionModel().getSelectedItem();
             selectedGenderText.setText("Selected Gender: " + selectedGender);
