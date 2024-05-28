@@ -17,6 +17,10 @@ import swimapp.frontend.Main;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller class for the Admin window in the swim application.
+ * Handles UI interactions and updates the member list display.
+ */
 public class AdminWindowController {
 
     @FXML
@@ -37,6 +41,9 @@ public class AdminWindowController {
     @FXML
     private ListView<Member> lst_admMemList;
 
+    /**
+     * Initializes the controller class. Sets up event handlers for the buttons.
+     */
     @FXML
     public void initialize() {
         btn_admMbShow.setOnAction(event -> showMembers());
@@ -46,6 +53,9 @@ public class AdminWindowController {
         btn_admBack.setOnAction(event -> goBack());
     }
 
+    /**
+     * Shows all members in the ListView.
+     */
     private void showMembers() {
         lst_admMemList.getItems().clear();
 
@@ -64,10 +74,11 @@ public class AdminWindowController {
                 }
             }
         });
-
-
     }
 
+    /**
+     * Shows passive members in the ListView.
+     */
     private void showPassiveMembers() {
         lst_admMemList.getItems().clear();
         List<Member> members = GuiInterface.getMembersByType(MembershipType.PASSIVE);
@@ -76,6 +87,9 @@ public class AdminWindowController {
         }
     }
 
+    /**
+     * Shows active members in the ListView.
+     */
     private void showActiveMembers() {
         lst_admMemList.getItems().clear();
         List<Member> members = GuiInterface.getMembersByType(MembershipType.ADULT);
@@ -86,6 +100,9 @@ public class AdminWindowController {
         }
     }
 
+    /**
+     * Opens the window to add a new member.
+     */
     private void openAddMemberWindow() {
         try {
             Main.showMemberAddWindow();
@@ -94,6 +111,9 @@ public class AdminWindowController {
         }
     }
 
+    /**
+     * Goes back to the main window.
+     */
     private void goBack() {
         try {
             Main.showMainWindow();
@@ -102,6 +122,12 @@ public class AdminWindowController {
         }
     }
 
+    /**
+     * Opens the member detail window for the selected member.
+     *
+     * @param member the member to show details for
+     * @throws IOException if an I/O error occurs
+     */
     private void openMemberDetailWindow(Member member) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/swimapp/frontend/AdmMemberDetail.fxml"));
         Parent root = loader.load();

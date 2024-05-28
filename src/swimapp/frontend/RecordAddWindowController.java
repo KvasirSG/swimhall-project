@@ -5,16 +5,21 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
-import swimapp.backend.*;
 import javafx.stage.Stage;
+import swimapp.backend.DatabaseManager;
+import swimapp.backend.Discipline;
+import swimapp.backend.GuiInterface;
 import swimapp.backend.Record;
+import swimapp.backend.Swimmer;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Controller class for the Record Add window in the swim application.
+ * Handles UI interactions and record creation functionalities.
+ */
 public class RecordAddWindowController {
 
     @FXML
@@ -39,6 +44,9 @@ public class RecordAddWindowController {
 
     private Swimmer swimmer;
 
+    /**
+     * Initializes the controller class. Sets up event handlers for the buttons and ComboBox.
+     */
     @FXML
     public void initialize() {
         dbManager = new DatabaseManager();
@@ -50,17 +58,25 @@ public class RecordAddWindowController {
         btn_NrAdd.setOnAction(event -> addRecord());
     }
 
+    /**
+     * Sets the swimmer and displays their ID.
+     *
+     * @param swimmer the swimmer to set
+     */
     public void setSwimmer(Swimmer swimmer) {
         this.swimmer = swimmer;
         tf_NrSID.setText(String.valueOf(swimmer.getSwimmerID()));
         tf_NrSID.setDisable(true);
     }
 
-    private void addRecord(){
+    /**
+     * Adds a new performance record for the swimmer.
+     */
+    private void addRecord() {
         try {
             int swimmerID = swimmer.getSwimmerID();
             Discipline selectedDiscipline = cb_NrDisc.getSelectionModel().getSelectedItem();
-            if (selectedDiscipline == null){
+            if (selectedDiscipline == null) {
                 showAlert("Error", "Please select a discipline.");
                 return;
             }
@@ -94,17 +110,25 @@ public class RecordAddWindowController {
             // Provide confirmation to the user
             showAlert("Record Added", "Record for Swimmer ID " + swimmerID + " in discipline " + selectedDiscipline.getName() + " has been successfully added.");
 
-
-        }catch (Exception e) {
+        } catch (Exception e) {
             showAlert("Error", "Error adding record: " + e.getMessage());
         }
     }
 
+    /**
+     * Closes the Record Add window.
+     */
     private void goBack() {
         Stage stage = (Stage) btn_NrBack.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Displays an alert dialog.
+     *
+     * @param title   the title of the alert
+     * @param content the content text of the alert
+     */
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

@@ -6,6 +6,10 @@ import javafx.scene.control.Label;
 import swimapp.backend.DatabaseManager;
 import swimapp.backend.Invoice;
 
+/**
+ * Controller class for the Invoice window in the swim application.
+ * Handles UI interactions and updates the invoice-related functionalities.
+ */
 public class InvoiceWindowController {
 
     @FXML
@@ -29,6 +33,9 @@ public class InvoiceWindowController {
     private DatabaseManager dbManager;
     private Invoice invoice;
 
+    /**
+     * Initializes the controller class. Sets up event handlers for the buttons.
+     */
     @FXML
     public void initialize() {
         dbManager = new DatabaseManager();
@@ -37,6 +44,11 @@ public class InvoiceWindowController {
         btn_makePayment.setOnAction(event -> makePayment());
     }
 
+    /**
+     * Sets the invoice and displays its details.
+     *
+     * @param invoice the invoice to display details for
+     */
     public void setInvoice(Invoice invoice) {
         this.invoice = invoice;
         lbl_invName.setText("Member ID: " + invoice.getMemberID()); // Adjust this line to show member name if needed
@@ -45,6 +57,9 @@ public class InvoiceWindowController {
         lbl_issueDate.setText(String.valueOf(invoice.getDueDate()));
     }
 
+    /**
+     * Marks the invoice as paid and updates the display.
+     */
     private void makePayment() {
         if (invoice != null) {
             invoice.setPaid(true);
@@ -53,6 +68,9 @@ public class InvoiceWindowController {
         }
     }
 
+    /**
+     * Closes the invoice window.
+     */
     private void closeWindow() {
         btn_invBack.getScene().getWindow().hide();
     }

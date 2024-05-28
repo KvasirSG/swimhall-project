@@ -5,20 +5,19 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Text;
 import swimapp.backend.*;
-import swimapp.frontend.Main;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
-import static swimapp.backend.MembershipType.*;
-
+/**
+ * Controller class for the Member Add window in the swim application.
+ * Handles UI interactions and member creation functionalities.
+ */
 public class MemberAddWindowController {
 
     @FXML
     private ComboBox<String> genderComboBox;
+
     @FXML
     private Button btn_NmBack;
 
@@ -36,6 +35,9 @@ public class MemberAddWindowController {
 
     private Gender selectedGenderToEnum;
 
+    /**
+     * Initializes the controller class. Sets up event handlers for the buttons and ComboBox.
+     */
     @FXML
     public void initialize() {
         genderComboBox.getItems().addAll(Gender.MALE.toString(), Gender.FEMALE.toString());
@@ -49,6 +51,9 @@ public class MemberAddWindowController {
         btn_NmCreate.setOnAction(event -> addMember());
     }
 
+    /**
+     * Adds a new member based on the input fields.
+     */
     private void addMember() {
         try {
             String name = tf_NmName.getText();
@@ -82,6 +87,10 @@ public class MemberAddWindowController {
             alert.showAndWait();
         }
     }
+
+    /**
+     * Navigates back to the Admin window.
+     */
     private void goBack() {
         try {
             Main.showAdminWindow();

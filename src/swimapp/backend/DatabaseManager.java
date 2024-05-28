@@ -15,7 +15,7 @@ public class DatabaseManager {
     private String databaseUrl = "jdbc:sqlite:swim-db";
 
     /**
-     * Constructs a swimapp.backend.DatabaseManager and initializes a connection to the database.
+     * Constructs a DatabaseManager and initializes a connection to the database.
      */
     public DatabaseManager() {
         connect(databaseUrl);
@@ -23,6 +23,7 @@ public class DatabaseManager {
 
     /**
      * Establishes a connection to the specified database URL.
+     *
      * @param databaseUrl the URL of the database to connect to
      */
     private void connect(String databaseUrl) {
@@ -35,6 +36,7 @@ public class DatabaseManager {
 
     /**
      * Retrieves the auto-commit mode for the current database connection.
+     *
      * @return true if the connection is in auto-commit mode, false otherwise.
      * @throws SQLException if a database access error occurs
      */
@@ -42,10 +44,9 @@ public class DatabaseManager {
         return connection.getAutoCommit();
     }
 
-    // swimapp.backend.Member Management
-
     /**
      * Adds a new member to the database.
+     *
      * @param member the member to add
      */
     public void addMember(Member member) {
@@ -53,14 +54,14 @@ public class DatabaseManager {
         String sql = "INSERT INTO Members (name, gender, birthday, membershipTypeID) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, member.getName());
-            statement.setString(2,member.getGender().name());
+            statement.setString(2, member.getGender().name());
             statement.setDate(3, Date.valueOf(member.getBirthDate()));
             statement.setInt(4, member.getMembershipTypeID());
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
                 ResultSet rs = statement.getGeneratedKeys();
-                if (rs.next()){
+                if (rs.next()) {
                     memberID = rs.getInt(1);
                     member.setMemberID(memberID);
                 }
@@ -72,6 +73,7 @@ public class DatabaseManager {
 
     /**
      * Retrieves a member from the database based on member ID.
+     *
      * @param memberID the ID of the member to retrieve
      * @return the retrieved member, or null if not found
      */
@@ -82,8 +84,7 @@ public class DatabaseManager {
                 "JOIN MembershipTypes ON Members.membershipTypeID = MembershipTypes.typeID " +
                 "WHERE Members.memberID = ?";
 
-        try (
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, memberID);
             ResultSet rs = pstmt.executeQuery();
 
@@ -107,6 +108,7 @@ public class DatabaseManager {
 
     /**
      * Retrieves all members from the database.
+     *
      * @return a list of all members
      */
     public List<Member> getAllMembers() {
@@ -116,8 +118,7 @@ public class DatabaseManager {
                 "FROM Members " +
                 "JOIN MembershipTypes ON Members.membershipTypeID = MembershipTypes.typeID ";
 
-        try (
-             Statement stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -137,27 +138,37 @@ public class DatabaseManager {
         return members;
     }
 
-    public void deleteMember(int memberID){
+    /**
+     * Deletes a member from the database based on member ID.
+     *
+     * @param memberID the ID of the member to delete
+     */
+    public void deleteMember(int memberID) {
         String sql = "DELETE FROM Members WHERE memberID = ?";
 
-        try(PreparedStatement pstmt = connection.prepareStatement(sql)){
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, memberID);
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("swimapp.backend.Member deleted successfuly!");
+                System.out.println("Member deleted successfully!");
             } else {
                 System.out.println("Could not find member with ID: " + memberID);
             }
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public void updateMember(Member member){
+    /**
+     * Updates the details of an existing member in the database.
+     *
+     * @param member the member with updated details
+     */
+    public void updateMember(Member member) {
         String sql = "UPDATE Members SET name = ?, gender = ?, birthday = ?, membershipTypeID = ? WHERE memberID = ?";
 
-        try(PreparedStatement statement = connection.prepareStatement(sql)){
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, member.getName());
             statement.setString(2, member.getGender().name());
             statement.setDate(3, Date.valueOf(member.getBirthday()));
@@ -166,21 +177,21 @@ public class DatabaseManager {
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("swimapp.backend.Member updated successfuly!");
+                System.out.println("Member updated successfully!");
             } else {
                 System.out.println("Could not find member with ID: " + member.getMemberID());
             }
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
-
 
     // Membership Management
 
     /**
      * Updates the membership fee for a specific membership type.
+     *
      * @param typeID the ID of the membership type to update
      * @param newFee the new fee amount to set
      */
@@ -204,6 +215,7 @@ public class DatabaseManager {
 
     /**
      * Retrieves a membership type from the database based on its type ID.
+     *
      * @param typeID the ID of the membership type to retrieve
      * @return the retrieved membership type, or null if not found
      */
@@ -211,8 +223,7 @@ public class DatabaseManager {
         String sql = "SELECT typeID, description, fee FROM MembershipTypes WHERE typeID = ?";
         MembershipType membershipType = null;
 
-        try (
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, typeID);
             ResultSet rs = pstmt.executeQuery();
 
@@ -231,6 +242,7 @@ public class DatabaseManager {
 
     /**
      * Retrieves the membership type for a specific member.
+     *
      * @param memberID the ID of the member whose membership type is to be retrieved
      * @return the membership type of the specified member, or null if not found
      */
@@ -240,8 +252,7 @@ public class DatabaseManager {
                 "JOIN Members ON Members.membershipTypeID = MembershipTypes.typeID " +
                 "WHERE Members.memberID = ?";
 
-        try (
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, memberID);
             ResultSet rs = pstmt.executeQuery();
 
@@ -258,84 +269,55 @@ public class DatabaseManager {
         return null;
     }
 
-    public List<MembershipType> getMembershipTypes(){
+    /**
+     * Retrieves all membership types from the database.
+     *
+     * @return a list of all membership types
+     */
+    public List<MembershipType> getMembershipTypes() {
         String sql = "SELECT * from MembershipTypes";
         List<MembershipType> tempTypes = new ArrayList<>();
-        try( PreparedStatement pstmt = connection.prepareStatement(sql)){
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 int typeID = rs.getInt("typeID");
                 String description = rs.getString("description");
                 double fee = rs.getDouble("fee");
                 tempTypes.add(new MembershipType(typeID, description, fee));
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return tempTypes;
     }
 
-    // swimapp.backend.Swimmer Management
-
-    /**
-     * NOT IMPLEMENTED BY THE SQLITE DRIVER
-     * Adds a new swimmer to the database and assigns them to a team.
-     * @param swimmer the swimmer to add
-     * @param teamID the ID of the team to which the swimmer will be assigned
-     */
-   /* public void addNewSwimmer(Swimmer swimmer, int teamID){
-
-        String sql = "INSERT INTO Swimmers (memberID, teamID) VALUES (?, ?)";
-
-        Member member = new Member(swimmer.getName(),swimmer.getGender(),swimmer.getBirthday(),false);
-        addMember(member);
-        int memberID = member.getMemberID();
-        swimmer.setMemberID(memberID);
-
-        try{
-            if (memberID!= 0){
-                PreparedStatement pstmt = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
-                pstmt.setInt(1, memberID);
-                pstmt.setInt(2,teamID);
-                int swimmerAffected = pstmt.executeUpdate();
-
-                if (swimmerAffected==1){
-                    ResultSet rs = pstmt.getGeneratedKeys();
-                    if (rs.next()){
-                        swimmer.setSwimmerID(rs.getInt(1));
-                    }
-                }
-            } else throw new SQLException("swimapp.backend.Member could not be added");
-
-
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-    }*/
+    // Swimmer Management
 
     /**
      * Adds a swimmer to the database from an existing member and assigns them to a team.
+     *
      * @param memberID the ID of the member who is to be added as a swimmer
      * @param teamID the ID of the team to which the swimmer will be assigned
      * @return the ID of the newly added swimmer, or 0 if the operation fails
      */
-    public int addSwimmerFromExistingMember(int memberID,int teamID){
+    public int addSwimmerFromExistingMember(int memberID, int teamID) {
         String sql = "INSERT INTO Swimmers (memberID, teamID) VALUES (?, ?)";
-        int swimmerID=0;
-        try(PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+        int swimmerID = 0;
+        try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1, memberID);
             pstmt.setInt(2, teamID);
             int affectedRows = pstmt.executeUpdate();
-            if (affectedRows>0){
+            if (affectedRows > 0) {
                 ResultSet rs = pstmt.getGeneratedKeys();
-                if (rs.next()){
+                if (rs.next()) {
                     swimmerID = rs.getInt(1);
                 }
 
                 System.out.println("New swimmer added successfully for memberID: " + memberID);
+            } else {
+                System.out.println("Failed to add new swimmer for memberID: " + memberID);
             }
-            else System.out.println("Failed to add new swimmer for memberID: " + memberID);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error adding new swimmer: " + e.getMessage());
         }
         return swimmerID;
@@ -343,21 +325,22 @@ public class DatabaseManager {
 
     /**
      * Retrieves a swimmer from the database based on the swimmer ID.
+     *
      * @param swimmerID the ID of the swimmer to retrieve
      * @return the retrieved swimmer, or null if not found
      */
-    public Swimmer getSwimmer(int swimmerID){
+    public Swimmer getSwimmer(int swimmerID) {
         String sql = "SELECT Swimmers.swimmerID, Swimmers.teamID, Members.memberID, Members.name, Members.gender, Members.birthday, Members.membershipTypeID, MembershipTypes.description, MembershipTypes.fee " +
                 "FROM Swimmers " +
                 "JOIN Members ON Swimmers.memberID = Members.memberID " +
                 "LEFT JOIN MembershipTypes ON Members.membershipTypeID = MembershipTypes.typeID " +
                 "WHERE Swimmers.swimmerID = ?";
         Swimmer swimmer = null;
-        try(PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1,swimmerID);
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, swimmerID);
             ResultSet rs = pstmt.executeQuery();
 
-            if (rs.next()){
+            if (rs.next()) {
                 int teamID = rs.getInt("teamID");
                 int memberID = rs.getInt("memberID");
                 String name = rs.getString("name");
@@ -367,9 +350,9 @@ public class DatabaseManager {
                 String description = rs.getString("description");
                 double fee = rs.getDouble("fee");
 
-                swimmer = new Swimmer(swimmerID,memberID,name, gender,birthday,new MembershipType(membershipTypeID,description,fee));
+                swimmer = new Swimmer(swimmerID, memberID, name, gender, birthday, new MembershipType(membershipTypeID, description, fee));
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error retrieving swimmer: " + e.getMessage());
         }
         return swimmer;
@@ -377,18 +360,19 @@ public class DatabaseManager {
 
     /**
      * Retrieves all swimmers from the database.
+     *
      * @return a list of all swimmers
      */
-    public List<Swimmer> getSwimmers(){
+    public List<Swimmer> getSwimmers() {
         String sql = "SELECT Swimmers.swimmerID, Swimmers.teamID, Members.memberID, Members.name, Members.gender, Members.birthday, Members.membershipTypeID, MembershipTypes.description, MembershipTypes.fee " +
                 "FROM Swimmers " +
                 "JOIN Members ON Swimmers.memberID = Members.memberID " +
                 "LEFT JOIN MembershipTypes ON Members.membershipTypeID = MembershipTypes.TypeID";
         List<Swimmer> swimmers = new ArrayList<>();
-        try(PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
 
-            while (rs.next()){
+            while (rs.next()) {
                 int swimmerID = rs.getInt("swimmerID");
                 int teamID = rs.getInt("teamID");
                 int memberID = rs.getInt("memberID");
@@ -399,40 +383,46 @@ public class DatabaseManager {
                 String description = rs.getString("description");
                 double fee = rs.getDouble("fee");
 
-                Swimmer swimmer = new Swimmer(swimmerID,memberID,name, gender,birthday,new MembershipType(membershipTypeID,description,fee));
+                Swimmer swimmer = new Swimmer(swimmerID, memberID, name, gender, birthday, new MembershipType(membershipTypeID, description, fee));
                 swimmers.add(swimmer);
 
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error retrieving swimmers: " + e.getMessage());
         }
         return swimmers;
     }
 
-    public void removeSwimmer(int swimmerID){
+    /**
+     * Removes a swimmer from the database based on swimmer ID.
+     *
+     * @param swimmerID the ID of the swimmer to remove
+     */
+    public void removeSwimmer(int swimmerID) {
         String sql = "DELETE FROM Swimmers WHERE swimmerID = ?";
 
-        try(PreparedStatement pstmt = connection.prepareStatement(sql)){
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, swimmerID);
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("swimapp.backend.Swimmer deleted successfuly!");
+                System.out.println("Swimmer deleted successfully!");
             } else {
                 System.out.println("Could not find swimmer with ID: " + swimmerID);
             }
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    // swimapp.backend.Discipline Management
+    // Discipline Management
 
     /**
      * Adds a new discipline to the database.
+     *
      * @param name the name of the discipline to add
      */
-    public void addDiscipline(String name){
+    public void addDiscipline(String name) {
         String sql = "INSERT INTO Disciplines (name) VALUES (?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, name);
@@ -449,52 +439,60 @@ public class DatabaseManager {
 
     /**
      * Adds a discipline to a specific swimmer in the database.
+     *
      * @param swimmerID the ID of the swimmer
      * @param disciplineID the ID of the discipline to be added
      */
-    public void addSwimmerDiscipline(int swimmerID, int disciplineID){
+    public void addSwimmerDiscipline(int swimmerID, int disciplineID) {
         String sql = "INSERT INTO SwimmersDisciplines (swimmerID, disciplineID) VALUES (?, ?)";
-        try(PreparedStatement pstmt = connection.prepareStatement(sql)){
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, swimmerID);
             pstmt.setInt(2, disciplineID);
             pstmt.executeUpdate();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error adding discipline to swimmer: " + e.getMessage());
         }
     }
 
-    public void removeSwimmerDiscipline(int swimmerID, int disciplineID){
-        String sql ="DELETE FROM SwimmersDisciplines " +
+    /**
+     * Removes a discipline from a specific swimmer in the database.
+     *
+     * @param swimmerID the ID of the swimmer
+     * @param disciplineID the ID of the discipline to be removed
+     */
+    public void removeSwimmerDiscipline(int swimmerID, int disciplineID) {
+        String sql = "DELETE FROM SwimmersDisciplines " +
                 "WHERE swimmerID = ? AND disciplineID = ?";
-        try(PreparedStatement pstmt = connection.prepareStatement(sql)){
-            pstmt.setInt(1,swimmerID);
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, swimmerID);
             pstmt.setInt(2, disciplineID);
             pstmt.executeUpdate();
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
     /**
      * Retrieves a discipline from the database based on the discipline ID.
+     *
      * @param disciplineID the ID of the discipline to retrieve
      * @return the retrieved discipline, or null if not found
      */
-    public Discipline getDiscipline(int disciplineID){
+    public Discipline getDiscipline(int disciplineID) {
         String sql = "SELECT d.disciplineID, d.name FROM Disciplines d " +
                 "WHERE d.disciplineID = ?";
         Discipline discipline = null;
-        try(PreparedStatement pstmt = connection.prepareStatement(sql)){
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, disciplineID);
             ResultSet rs = pstmt.executeQuery();
 
-            if (rs.next()){
+            if (rs.next()) {
                 String name = rs.getString("name");
-                discipline = new Discipline(disciplineID,name);
+                discipline = new Discipline(disciplineID, name);
 
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error retrieving discipline: " + e.getMessage());
         }
         return discipline;
@@ -502,22 +500,23 @@ public class DatabaseManager {
 
     /**
      * Retrieves all disciplines from the database.
+     *
      * @return a list of all disciplines
      */
-    public List<Discipline> getDisciplines(){
+    public List<Discipline> getDisciplines() {
         String sql = "SELECT d.disciplineID, d.name FROM Disciplines d";
         List<Discipline> disciplines = new ArrayList<>();
-        try(PreparedStatement pstmt = connection.prepareStatement(sql)){
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
 
-            while (rs.next()){
+            while (rs.next()) {
                 int disciplineID = rs.getInt("disciplineID");
                 String name = rs.getString("name");
-                Discipline discipline = new Discipline(disciplineID,name);
+                Discipline discipline = new Discipline(disciplineID, name);
                 disciplines.add(discipline);
 
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error retrieving disciplines: " + e.getMessage());
         }
         return disciplines;
@@ -525,6 +524,7 @@ public class DatabaseManager {
 
     /**
      * Retrieves all disciplines for a specific swimmer.
+     *
      * @param swimmerID the ID of the swimmer whose disciplines are to be retrieved
      * @return a list of disciplines associated with the specified swimmer
      */
@@ -534,21 +534,27 @@ public class DatabaseManager {
                 "JOIN SwimmersDisciplines sd ON d.disciplineID = sd.disciplineID " +
                 "WHERE sd.swimmerID = ?";
 
-        try(PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1,swimmerID);
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, swimmerID);
             ResultSet rs = pstmt.executeQuery();
 
-            while (rs.next()){
+            while (rs.next()) {
                 int disciplineID = rs.getInt("disciplineID");
                 String name = rs.getString("name");
                 disciplines.add(new Discipline(disciplineID, name));
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error retrieving disciplines: " + e.getMessage());
         }
         return disciplines;
     }
 
+    /**
+     * Retrieves all swimmers for a specific discipline.
+     *
+     * @param disciplineID the ID of the discipline
+     * @return a list of swimmers associated with the specified discipline
+     */
     public List<Swimmer> getSwimmersByDiscipline(int disciplineID) {
         List<Swimmer> swimmers = new ArrayList<>();
         String sql = "SELECT S.swimmerID, M.memberID, M.name AS memberName, M.birthday, M.gender, M.membershipTypeID, MT.typeID, MT.description AS membershipDescription, MT.fee, D.name AS disciplineName " +
@@ -577,10 +583,11 @@ public class DatabaseManager {
         return swimmers;
     }
 
-    // swimapp.backend.Record Management
+    // Record Management
 
     /**
      * Adds a new performance record to the database.
+     *
      * @param record the performance record to add
      */
     public void addPerformanceRecord(Record record) {
@@ -604,6 +611,7 @@ public class DatabaseManager {
 
     /**
      * Retrieves all performance records for a specific swimmer.
+     *
      * @param swimmerID the ID of the swimmer whose records are to be retrieved
      * @return a list of performance records for the specified swimmer
      */
@@ -612,22 +620,28 @@ public class DatabaseManager {
         String sql = "SELECT pr.time, pr.date, pr.disciplineID " +
                 "FROM PerformanceRecords pr " +
                 "WHERE pr.swimmerID = ?";
-        try(PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, swimmerID);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 int disciplineID = rs.getInt("disciplineID");
                 double time = rs.getDouble("time");
                 LocalDate date = rs.getDate("date").toLocalDate();
-                Record record = new Record(swimmerID,disciplineID,time,date);
+                Record record = new Record(swimmerID, disciplineID, time, date);
                 records.add(record);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error retrieving performance records: " + e.getMessage());
         }
         return records;
     }
 
+    /**
+     * Retrieves a discipline by its ID.
+     *
+     * @param disciplineID the ID of the discipline to retrieve
+     * @return the retrieved discipline, or null if not found
+     */
     public Discipline getDisciplineByID(int disciplineID) {
         String sql = "SELECT disciplineID, name FROM Disciplines WHERE disciplineID = ?";
         Discipline discipline = null;
@@ -644,29 +658,40 @@ public class DatabaseManager {
         return discipline;
     }
 
-    // swimapp.backend.Invoice Management
+    // Invoice Management
 
-    public void addInvoice(Invoice invoice){
+    /**
+     * Adds a new invoice to the database.
+     *
+     * @param invoice the invoice to add
+     */
+    public void addInvoice(Invoice invoice) {
         String sql = "INSERT INTO Invoice (amount, memberID, paid, dueDate) VALUES (?, ?, ?, ?)";
-        try(PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setDouble(1, invoice.getAmount());
-            pstmt.setInt(2,invoice.getMemberID());
-            pstmt.setBoolean(3,invoice.isPaid());
-            pstmt.setDate(4,Date.valueOf(invoice.getDueDate()));
+            pstmt.setInt(2, invoice.getMemberID());
+            pstmt.setBoolean(3, invoice.isPaid());
+            pstmt.setDate(4, Date.valueOf(invoice.getDueDate()));
             int Affected = pstmt.executeUpdate();
-            if (Affected==1){
+            if (Affected == 1) {
                 ResultSet rs = pstmt.getGeneratedKeys();
-                if (rs.next()){
+                if (rs.next()) {
                     invoice.setInvoiceID(rs.getInt(1));
                 }
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
     }
 
-    public List<Invoice> getInvoicesForMember(int memberID){
+    /**
+     * Retrieves all invoices for a specific member.
+     *
+     * @param memberID the ID of the member whose invoices are to be retrieved
+     * @return a list of invoices for the specified member
+     */
+    public List<Invoice> getInvoicesForMember(int memberID) {
         List<Invoice> invoices = new ArrayList<>();
         String sql = "SELECT * FROM Invoice WHERE memberID = ?";
 
@@ -681,25 +706,37 @@ public class DatabaseManager {
                 LocalDate dueDate = resultSet.getDate("dueDate").toLocalDate();
                 invoices.add(new Invoice(amount, invoiceID, memberID, paid, dueDate));
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return invoices;
     }
 
-    public void markInvoiceAsPaid(long invoiceID){
+    /**
+     * Marks an invoice as paid in the database.
+     *
+     * @param invoiceID the ID of the invoice to mark as paid
+     */
+    public void markInvoiceAsPaid(long invoiceID) {
         String sql = "UPDATE Invoice SET paid = ? WHERE invoiceID = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, true);
             statement.setLong(2, invoiceID);
             statement.executeUpdate();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    // swimapp.backend.Competition Management
+    // Competition Management
 
+    /**
+     * Registers a swimmer for a competition in the database.
+     *
+     * @param competitionID the ID of the competition
+     * @param swimmerID the ID of the swimmer to register
+     * @throws SQLException if a database access error occurs
+     */
     public void registerSwimmerForCompetition(int competitionID, int swimmerID) throws SQLException {
         String query = "INSERT INTO CompetitionSwimmers (competitionID, swimmerID) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -709,6 +746,15 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Records a result for a swimmer in a competition in the database.
+     *
+     * @param competitionID the ID of the competition
+     * @param swimmerID the ID of the swimmer
+     * @param placement the placement of the swimmer
+     * @param time the time of the swimmer
+     * @throws SQLException if a database access error occurs
+     */
     public void recordResult(int competitionID, int swimmerID, int placement, double time) throws SQLException {
         String query = "INSERT INTO Results (competitionID, swimmerID, placement, time) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -720,6 +766,13 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Retrieves all swimmers for a specific team.
+     *
+     * @param teamID the ID of the team
+     * @return a list of swimmers associated with the specified team
+     * @throws SQLException if a database access error occurs
+     */
     public List<Swimmer> getSwimmersByTeam(int teamID) throws SQLException {
         String query = "SELECT s.swimmerID, m.memberID, m.name, m.gender, m.birthday, m.membershipTypeID " +
                 "FROM Swimmers s " +
@@ -745,11 +798,19 @@ public class DatabaseManager {
 
         return swimmers;
     }
+
+    /**
+     * Retrieves all swimmers for a specific team and gender.
+     *
+     * @param teamID the ID of the team
+     * @param gender the gender of the swimmers to retrieve
+     * @return a list of swimmers associated with the specified team and gender
+     */
     public List<Swimmer> getSwimmersByTeamAndGender(int teamID, Gender gender) {
         List<Swimmer> swimmers = new ArrayList<>();
         String sql = "SELECT s.swimmerID, m.memberID, m.name, m.gender, m.birthday, m.membershipTypeID, mt.description, mt.fee " +
                 "FROM Swimmers s " +
-                "JOIN Members m ON s.memberID = m.memberID "+
+                "JOIN Members m ON s.memberID = m.memberID " +
                 "Join MembershipTypes mt on m.membershipTypeID = mt.typeID " +
                 "WHERE teamID = ? AND gender = ?";
 
@@ -772,7 +833,13 @@ public class DatabaseManager {
         return swimmers;
     }
 
-
+    /**
+     * Retrieves all competitions for a specific team.
+     *
+     * @param teamID the ID of the team
+     * @return a list of competitions associated with the specified team
+     * @throws SQLException if a database access error occurs
+     */
     public List<Competition> getCompetitionsForTeam(int teamID) throws SQLException {
         String query = "SELECT c.competitionID, c.date, c.location, c.compName " +
                 "FROM Competitions c " +
@@ -796,6 +863,13 @@ public class DatabaseManager {
         return competitions;
     }
 
+    /**
+     * Adds a team to a competition in the database.
+     *
+     * @param teamID the ID of the team to add
+     * @param competitionID the ID of the competition to add the team to
+     * @throws SQLException if a database access error occurs
+     */
     public void addTeamToCompetition(int teamID, int competitionID) throws SQLException {
         String query = "INSERT INTO TeamCompetitions (teamID, competitionID) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -804,7 +878,6 @@ public class DatabaseManager {
             stmt.executeUpdate();
         }
     }
-
 
     // DB Connection Management
 
@@ -825,12 +898,12 @@ public class DatabaseManager {
     /**
      * Reconnects to the database if the connection has been closed.
      */
-    public void reconnect(){
-        try{
-            if (this.connection != null && this.connection.isClosed()){
+    public void reconnect() {
+        try {
+            if (this.connection != null && this.connection.isClosed()) {
                 this.connect(databaseUrl);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
