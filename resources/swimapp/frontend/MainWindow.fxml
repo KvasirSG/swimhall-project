@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swimapp.frontend.MainWindowController">
+   <center>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text layoutX="265.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="VÆLG LOGIN" />
+            <Button fx:id="btn_adm" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="ADMINISTRATOR">
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin></Button>
+            <Button fx:id="btn_trn" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="TRÆNER">
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin></Button>
+            <Button fx:id="btn_ksr" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="KASSÉR">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin></Button>
+
+         </children>
+      </VBox>
+   </center>
+   <top>
+      <Label contentDisplay="CENTER" ellipsisString="" graphicTextGap="0.0" text="Delfinen" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" BorderPane.alignment="CENTER">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+         <BorderPane.margin>
+            <Insets top="10.0" />
+         </BorderPane.margin>
+      </Label>
+   </top>
+</BorderPane>
