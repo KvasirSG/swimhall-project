@@ -65,6 +65,8 @@ public class KassérWindowController {
 
     private void showArrears() {
         lv_memView.getItems().clear();
+        payments.fetchMembersFromDB(dbManager);
+        payments.fetchInvoicesForMembers(dbManager);
         List<Member> membersInArrears = payments.getMembersInArrears(dbManager);
         for (Member member : membersInArrears) {
             lv_memView.getItems().add(member.toString());
