@@ -5,69 +5,104 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-
-
-public class Team
-{
+/**
+ * Represents a team in the swim club.
+ */
+public class Team {
     public static int JUNIOR = 1;
     public static int SENIOR = 2;
     private int teamID;
     private String name;
-    List<Swimmer> team;
+    List<Swimmer> team = new ArrayList<>();
 
-    public Team(int teamID, String name)
-    {
+    /**
+     * Constructs a Team with the specified team ID and name.
+     *
+     * @param teamID the ID of the team
+     * @param name the name of the team
+     */
+    public Team(int teamID, String name) {
         this.teamID = teamID;
         this.name = name;
     }
 
-    public int getTeamID()
-    {
+    /**
+     * Gets the ID of the team.
+     *
+     * @return the ID of the team
+     */
+    public int getTeamID() {
         return teamID;
     }
 
-    public void setTeamID(int teamID)
-    {
+    /**
+     * Sets the ID of the team.
+     *
+     * @param teamID the new ID of the team
+     */
+    public void setTeamID(int teamID) {
         this.teamID = teamID;
     }
 
-    public String getName()
-    {
+    /**
+     * Gets the name of the team.
+     *
+     * @return the name of the team
+     */
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    /**
+     * Sets the name of the team.
+     *
+     * @param name the new name of the team
+     */
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void addSwimmer(Swimmer swimmer)
-    {
+    /**
+     * Adds a swimmer to the team.
+     *
+     * @param swimmer the swimmer to add to the team
+     */
+    public void addSwimmer(Swimmer swimmer) {
         swimmer.setTeamID(this.teamID);
         team.add(swimmer);
     }
 
-    public void removeSwimmer(Swimmer swimmer)
-    {
-        if (swimmer.getTeamID() == this.teamID){
+    /**
+     * Removes a swimmer from the team.
+     *
+     * @param swimmer the swimmer to remove from the team
+     */
+    public void removeSwimmer(Swimmer swimmer) {
+        if (swimmer.getTeamID() == this.teamID) {
             swimmer.setTeamID(0);
             team.remove(swimmer);
         }
-
     }
 
-    public List<Record> getTopRecordsPerDiscipline(Discipline discipline, DatabaseManager dbManager){
+    /**
+     * Gets the top performance records per discipline for the team.
+     *
+     * @param discipline the discipline to get the top records for
+     * @param dbManager the database manager to handle database operations
+     * @return a list of the top performance records per discipline for the team
+     */
+    public List<Record> getTopRecordsPerDiscipline(Discipline discipline, DatabaseManager dbManager) {
         List<Record> records = new ArrayList<>();
-        for (Swimmer swimmer : team){
+        for (Swimmer swimmer : team) {
             List<Record> tempRecords = swimmer.getBestRecordPerDiscipline(dbManager);
-            for (Record tempRecord:tempRecords){
-                if (tempRecord.getDisciplineID()==discipline.getDisciplineID()){
+            for (Record tempRecord : tempRecords) {
+                if (tempRecord.getDisciplineID() == discipline.getDisciplineID()) {
                     records.add(tempRecord);
                 }
             }
         }
         Collections.sort(records, Comparator.comparingDouble(Record::getTime));
-        int count = Math.min(5,records.size());
+        int count = Math.min(5, records.size());
         List<Record> bestTimes = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             bestTimes.add(records.get(i));
@@ -75,12 +110,18 @@ public class Team
         return bestTimes;
     }
 
-    public List<Swimmer> getTopSwimmersPerDiscipline(Discipline discipline, DatabaseManager dbManager){
+    /**
+     * Gets the top swimmers per discipline for the team.
+     *
+     * @param discipline the discipline to get the top swimmers for
+     * @param dbManager the database manager to handle database operations
+     * @return a list of the top swimmers per discipline for the team
+     */
+    public List<Swimmer> getTopSwimmersPerDiscipline(Discipline discipline, DatabaseManager dbManager) {
         List<Swimmer> bestSwimmers = new ArrayList<>();
-        for (Record record:getTopRecordsPerDiscipline(discipline, dbManager)){
+        for (Record record : getTopRecordsPerDiscipline(discipline, dbManager)) {
             bestSwimmers.add(dbManager.getSwimmer(record.getSwimmerID()));
         }
         return bestSwimmers;
     }
-
 }

@@ -5,7 +5,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import swimapp.backend.DatabaseManager;
-import swimapp.backend.Record;
 import swimapp.backend.Swimmer;
 import swimapp.backend.Discipline;
 import javafx.scene.control.Alert.AlertType;
@@ -14,6 +13,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Controller class for the Competition window in the swim application.
+ * Handles UI interactions and updates the competition-related functionalities.
+ */
 public class CompetitionWindowController {
 
     @FXML
@@ -39,6 +42,9 @@ public class CompetitionWindowController {
 
     private DatabaseManager dbManager;
 
+    /**
+     * Initializes the controller class. Sets up event handlers for the buttons.
+     */
     @FXML
     public void initialize() {
         dbManager = new DatabaseManager();
@@ -47,6 +53,9 @@ public class CompetitionWindowController {
         btn_CDesM.setOnAction(event -> designateMember());
     }
 
+    /**
+     * Navigates back to the trainer window.
+     */
     private void goBack() {
         try {
             Main.showTrainerWindow();
@@ -55,6 +64,9 @@ public class CompetitionWindowController {
         }
     }
 
+    /**
+     * Registers a swimmer for a competition based on the input fields.
+     */
     private void designateMember() {
         try {
             int competitionID = Integer.parseInt(tf_CCID.getText());
@@ -90,6 +102,14 @@ public class CompetitionWindowController {
         }
     }
 
+    /**
+     * Displays an alert dialog.
+     *
+     * @param alertType the type of alert
+     * @param title the title of the alert
+     * @param header the header text of the alert
+     * @param content the content text of the alert
+     */
     private void showAlert(AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

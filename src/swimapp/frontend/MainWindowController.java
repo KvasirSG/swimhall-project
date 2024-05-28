@@ -2,10 +2,12 @@ package swimapp.frontend;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import swimapp.frontend.Main;
-
 import java.io.IOException;
 
+/**
+ * Controller class for the Main window in the swim application.
+ * Handles UI interactions and navigation to different windows.
+ */
 public class MainWindowController {
 
     @FXML
@@ -17,6 +19,9 @@ public class MainWindowController {
     @FXML
     private Button btn_trn;
 
+    /**
+     * Initializes the controller class. Sets up event handlers for the buttons.
+     */
     @FXML
     public void initialize() {
         btn_ksr.setOnAction(event -> {

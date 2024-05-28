@@ -14,9 +14,15 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller class for the Kassér window in the swim application.
+ * Handles UI interactions and updates the member and invoice-related functionalities.
+ */
 public class KassérWindowController {
 
+    @FXML
     public Button btn_trsIssInv;
+
     @FXML
     private Button btn_trsMemShow;
 
@@ -32,6 +38,9 @@ public class KassérWindowController {
     private Payments payments;
     private DatabaseManager dbManager;
 
+    /**
+     * Initializes the controller class. Sets up event handlers for the buttons and ListView.
+     */
     @FXML
     public void initialize() {
         payments = new Payments();
@@ -55,6 +64,9 @@ public class KassérWindowController {
         });
     }
 
+    /**
+     * Shows all members in the ListView.
+     */
     private void showMembers() {
         lv_memView.getItems().clear();
         List<Member> members = dbManager.getAllMembers();
@@ -63,6 +75,9 @@ public class KassérWindowController {
         }
     }
 
+    /**
+     * Shows members in arrears in the ListView.
+     */
     private void showArrears() {
         lv_memView.getItems().clear();
         List<Member> membersInArrears = payments.getMembersInArrears(dbManager);
@@ -71,6 +86,9 @@ public class KassérWindowController {
         }
     }
 
+    /**
+     * Opens the invoice window for the selected member.
+     */
     private void openInvoiceWindow() {
         String selectedItem = lv_memView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
@@ -92,6 +110,12 @@ public class KassérWindowController {
         }
     }
 
+    /**
+     * Extracts the member ID from the given member string.
+     *
+     * @param memberString the string containing member information
+     * @return the member ID
+     */
     private int extractMemberIdFromString(String memberString) {
         // Assuming the string format is: "Member ID: 1 | Name: John Doe | Gender: MALE | Birthday: 1995-05-05 | Age: 29 | Membership: Adult"
         String[] parts = memberString.split("\\|");
@@ -111,7 +135,9 @@ public class KassérWindowController {
         throw new IllegalArgumentException("Invalid member string format: " + memberString);
     }
 
-
+    /**
+     * Navigates back to the main window.
+     */
     private void goBack() {
         try {
             Main.showMainWindow();
@@ -120,6 +146,11 @@ public class KassérWindowController {
         }
     }
 
+    /**
+     * Opens the window to issue a new invoice.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     private void openIssueInvoiceWindow() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/swimapp/frontend/IssueInvoiceWindow.fxml"));
         Parent root = loader.load();
