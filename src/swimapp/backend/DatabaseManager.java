@@ -171,7 +171,7 @@ public class DatabaseManager {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, member.getName());
             statement.setString(2, member.getGender().name());
-            statement.setDate(3, Date.valueOf(member.getBirthDate()));
+            statement.setDate(3, Date.valueOf(member.getBirthday()));
             statement.setInt(4, member.getMembershipTypeID());
             statement.setInt(5, member.getMemberID());
 
