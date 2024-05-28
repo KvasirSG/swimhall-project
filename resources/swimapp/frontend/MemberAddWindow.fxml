@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swimapp.frontend.MemberAddWindowController">
+   <left>
+      <AnchorPane prefHeight="210.0" prefWidth="115.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="btn_NmBack" layoutY="374.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="BACK" />
+            <Separator layoutX="115.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="10.0" />
+         </children>
+      </AnchorPane>
+   </left>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="tf_NmName" layoutY="80.0" />
+            <Text layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Member name:" />
+            <TextField fx:id="tf_NmBday" layoutY="140.0" />
+            <Text layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Member birthday (yyyy/mm/dd)" />
+            <Text layoutX="126.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Adding new member: " />
+            <Button fx:id="btn_NmCreate" layoutY="302.0" mnemonicParsing="false" text="Create Member" />
+            <Text layoutX="3.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gender" />
+            <ComboBox fx:id="genderComboBox" layoutY="250.0" prefWidth="150.0" />
+            <Text fx:id="selectedGenderText" layoutX="160.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

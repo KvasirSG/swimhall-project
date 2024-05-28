@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swimapp.frontend.IssueInvoiceWindowController">
+    <left>
+        <AnchorPane prefHeight="400.0" prefWidth="115.0" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="btn_iiBack" layoutY="375.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="BACK" />
+                <Separator layoutX="115.0" orientation="VERTICAL" prefHeight="400.0" />
+            </children>
+        </AnchorPane>
+    </left>
+    <center>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <TextField fx:id="tf_iiMemID" layoutY="250.0" />
+                <Text layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Member ID:" />
+                <Button fx:id="btn_iiCreate" layoutY="304.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="Issue invoice" />
+            <Text layoutX="173.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="INVOICE CREATION" />
+            <Text layoutX="-1.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please enter the ID of the recipient Member" />
+            </children>
+        </AnchorPane>
+    </center>
+</BorderPane>

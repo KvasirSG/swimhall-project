@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swimapp.frontend.AdmMemberDetailController">
+    <left>
+        <AnchorPane prefHeight="400.0" prefWidth="115.0" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="btn_amdBack" layoutY="375.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="BACK" />
+                <Separator layoutX="115.0" orientation="VERTICAL" prefHeight="400.0" />
+            </children>
+        </AnchorPane>
+    </left>
+    <center>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label fx:id="lbl_name" layoutY="80.0" />
+                <Label fx:id="lbl_birthday" layoutY="140.0" />
+                <Label fx:id="lbl_gender" layoutY="200.0" />
+                <Text layoutX="3.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
+                <Text layoutX="3.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Birthday:" />
+                <Text layoutX="3.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gender:" />
+                <Label fx:id="lbl_membership" layoutY="260.0" />
+                <Text layoutX="3.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Membership:" />
+                <Button fx:id="btn_toggleMembershipStatus" layoutY="304.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="Set Active" />
+                <Button fx:id="btn_addToSwimmer" layoutX="115.0" layoutY="304.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="208.0" text="Set Swimmer" />
+            </children>
+        </AnchorPane>
+    </center>
+</BorderPane>
