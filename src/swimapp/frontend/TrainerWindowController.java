@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import swimapp.backend.*;
@@ -21,13 +22,13 @@ import java.util.List;
 public class TrainerWindowController {
 
     @FXML
-    public AnchorPane ap_T2M;
+    public VBox vb_T2M;
     @FXML
-    public AnchorPane ap_T2W;
+    public VBox vb_T2W;
     @FXML
-    public AnchorPane ap_T1W;
+    public VBox vb_T1W;
     @FXML
-    public AnchorPane ap_T1M;
+    public VBox vb_T1M;
     @FXML
     public TitledPane acdn_T1W;
     @FXML
@@ -78,10 +79,10 @@ public class TrainerWindowController {
             buttonT1W.setOnAction(e -> showDisciplineMembers(discipline.getDisciplineID(), 1, Gender.FEMALE));
             buttonT2M.setOnAction(e -> showDisciplineMembers(discipline.getDisciplineID(), 2, Gender.MALE));
             buttonT2W.setOnAction(e -> showDisciplineMembers(discipline.getDisciplineID(), 2, Gender.FEMALE));
-            ap_T1M.getChildren().add(buttonT1M);
-            ap_T1W.getChildren().add(buttonT1W);
-            ap_T2M.getChildren().add(buttonT2M);
-            ap_T2W.getChildren().add(buttonT2W);
+            vb_T1M.getChildren().add(buttonT1M);
+            vb_T1W.getChildren().add(buttonT1W);
+            vb_T2M.getChildren().add(buttonT2M);
+            vb_T2W.getChildren().add(buttonT2W);
         }
 
         listView.setOnMouseClicked(event -> {
